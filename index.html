@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party game</title>
+    
+    <script type="module" src="./menu.js"></script>
+</head>
+<body>
+    <div>
+        <h1>Party Game</h1>
+        <p>Welcome to the Party Game!</p>
+        <ul>
+            <li><button id="authenticateBtn">Authenticate</button></li>
+            <li><button id="cleanupBtn">Clean up Lobbies</button></li>
+        </ul>
+        <ul>
+            <li><button id="createLobbyBtn">Create Lobby</button></li>
+        </ul>
+        
+    </div>
+    <div>
+        <label for="roomCodeInput">Room Code:</label>
+        <input type="text" id="roomCodeInput" placeholder="Enter room code">
+        <button id="joinLobbyBtn">Join Lobby with Code</button>
+    </div>
+    <div class="lobby-container" id="lobbyContainer" style="display: none;">
+        <h2>Lobby</h2>
+        <p id="lobbyInfo"></p>
+        <ul id="playerList"></ul>
+        <button id="readyBtn">Ready</button>
+        <button id="startGameBtn">Start Game</button>
+        <button id="leaveBtn">Leave Lobby</button>
+
+    </div>
+
+</body>
+</html>
