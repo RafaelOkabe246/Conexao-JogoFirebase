@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!-- saved from url=(0186)file:///C:/Users/User/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/D9EF4C5E287EAFBD0E1E253B7FED335A237B9950/transfers/2026-20/bingo%20joy%20hard.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Bingo Joy</title>
+
+  <script type="module" src="./BingoJoyHostManager.js"></script>
+  <script type="module" src="./BingoJoy.js"></script>
+      <script type="module" src="./BingoJoyClient.js"></script>
+
+
+  <style>
+    :root{
+      --violet-1:#8a46ff;
+      --violet-2:#6f38e9;
+      --violet-3:#33138b;
+      --violet-4:#25106a;
+      --panel-top:#4414aa;
+      --panel-bot:#2b0a72;
+      --panel-dark-top:#31108d;
+      --panel-dark-bot:#250666;
+      --grid-top:#9ddeff;
+      --grid-mid:#78b8ff;
+      --grid-bot:#3e77ff;
+      --ball-top:#fff2a7;
+      --ball-mid:#ffc85b;
+      --ball-bot:#ff8717;
+      --ball-edge:#df5400;
+      --green-top:#8aff72;
+      --green-bot:#2fd71d;
+      --footer:#39139f;
+      --footer-2:#2f0d89;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;color:#fff}
+    body{
+      overflow:hidden;
+      background:linear-gradient(180deg,#8c48ff 0%,#7440eb 18%,#4b239f 18.1%,#32117f 42%,#2b126e 64%,#281061 100%);
+      display:flex;justify-content:center;align-items:flex-start;
+    }
+
+    .app{
+      position:relative;
+      width:min(100vw,430px);
+      height:100vh;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05) 0 19%, transparent 19% 100%),
+        linear-gradient(180deg, #8b47ff 0%, #7740ef 18%, #3c188f 18.1%, #2a136e 58%, #6446b7 82%, #7b62c4 100%);
+      isolation:isolate;
+    }
+
+    .sky-stripes{
+      position:absolute; inset:0 0 auto 0; height:19%;
+      background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 18px, rgba(255,255,255,0) 18px 36px);
+      animation:stripesMove 12s linear infinite;
+      opacity:.9; pointer-events:none; z-index:0;
+    }
+    @keyframes stripesMove{from{background-position:0 0}to{background-position:180px 0}}
+
+    .stars,.stars2,.stars3{
+      position:absolute; inset:18% 0 12% 0; pointer-events:none; z-index:0;
+    }
+    .stars{
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.88) 0 1.3px, transparent 2px),
+        radial-gradient(circle, rgba(255,255,255,.75) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(255,255,255,.55) 0 1.4px, transparent 2.2px);
+      background-size:120px 120px, 180px 180px, 240px 240px;
+      background-position:0 0, 40px 60px, 80px 30px;
+      opacity:.5; animation:starsFloat 18s linear infinite;
+    }
+    .stars2{
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.78) 0 2px, transparent 3px),
+        radial-gradient(circle, rgba(255,255,255,.45) 0 1.3px, transparent 2.2px);
+      background-size:260px 260px, 300px 300px;
+      background-position:30px 10px, 90px 120px;
+      opacity:.35; animation:starsFloat 28s linear infinite reverse;
+    }
+    .stars3{
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.9) 0 3px, transparent 4px),
+        radial-gradient(circle, rgba(255,255,220,.72) 0 2px, transparent 3px);
+      background-size:340px 340px, 420px 420px;
+      background-position:20px 40px, 120px 170px;
+      opacity:.18; filter:blur(.2px); animation:twinkle 4s ease-in-out infinite alternate;
+    }
+    @keyframes starsFloat{from{transform:translateY(0)}to{transform:translateY(18px)}}
+    @keyframes twinkle{from{opacity:.12}to{opacity:.24}}
+
+    .mist{
+      position:absolute; left:-8%; right:-8%; bottom:10%; height:14%;
+      pointer-events:none; z-index:1; filter:blur(6px); opacity:.8;
+      background:
+        radial-gradient(ellipse at 10% 80%, rgba(255,255,255,.55) 0 15%, transparent 16%),
+        radial-gradient(ellipse at 28% 70%, rgba(255,255,255,.5) 0 16%, transparent 17%),
+        radial-gradient(ellipse at 45% 78%, rgba(255,255,255,.46) 0 14%, transparent 15%),
+        radial-gradient(ellipse at 63% 76%, rgba(255,255,255,.42) 0 15%, transparent 16%),
+        radial-gradient(ellipse at 80% 78%, rgba(255,255,255,.45) 0 14%, transparent 15%);
+      animation:mistDrift 16s ease-in-out infinite alternate;
+    }
+    @keyframes mistDrift{from{transform:translateX(-8px)}to{transform:translateX(10px)}}
+
+    .ui{
+      position:relative; z-index:2; height:100%;
+      display:flex; flex-direction:column; padding:18px 16px 0;
+    }
+
+    .topbar{
+      height:72px; border-radius:24px;
+      background:linear-gradient(180deg, rgba(77,23,175,.95), rgba(46,10,116,.98));
+      display:flex; align-items:center; justify-content:space-around;
+      padding:0 20px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 10px 20px rgba(0,0,0,.14);
+    }
+    .heart{width:46px;height:46px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.22))}
+    .heart.lost{opacity:.18;filter:grayscale(1)}
+    .heart svg{display:block;width:100%;height:100%}
+
+    .balls-panel{
+      margin-top:18px; height:160px; border-radius:34px; padding:0 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:linear-gradient(180deg, var(--panel-dark-top), var(--panel-dark-bot));
+      box-shadow:
+        inset 0 0 0 3px rgba(113,71,220,.8),
+        inset 0 0 18px rgba(255,255,255,.08),
+        0 0 0 6px rgba(205,208,255,.16),
+        0 8px 28px rgba(27,6,87,.25);
+    }
+
+    .ball{
+      position:relative; width:102px;height:102px; border:none; border-radius:50%;
+      flex:0 0 auto;
+      background:radial-gradient(circle at 34% 18%, #fff8c8 0%, var(--ball-top) 18%, var(--ball-mid) 48%, var(--ball-bot) 78%, var(--ball-edge) 100%);
+      box-shadow:inset 0 6px 10px rgba(255,255,255,.28), inset 0 -10px 16px rgba(0,0,0,.14), 0 10px 18px rgba(0,0,0,.18);
+      cursor:pointer; transition:transform .14s ease, filter .14s ease;
+    }
+    .ball:active{transform:scale(.97)}
+    .ball.selected{
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:inset 0 6px 10px rgba(255,255,255,.28), inset 0 -10px 16px rgba(0,0,0,.14), 0 0 0 5px rgba(255,255,255,.18), 0 10px 18px rgba(0,0,0,.18);
+    }
+    .ball .inner{
+      position:absolute; inset:22px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      background:radial-gradient(circle at 35% 25%, #eef7ff 0%, #dce9f0 75%, #c8d8e1 100%);
+      box-shadow:inset 0 2px 0 rgba(255,255,255,.78);
+      font-weight:900; font-size:30px; letter-spacing:-1px; color:#000;
+    }
+
+    .round-row{
+      width:90%; margin:8px auto 0; display:flex; justify-content:flex-end; min-height:32px;
+    }
+    .badge{
+      padding:6px 14px; border-radius:999px;
+      background:rgba(62,30,125,.88); border:1px solid rgba(255,255,255,.12);
+      font-size:14px; font-weight:700; box-shadow:0 6px 12px rgba(0,0,0,.16);
+    }
+
+    .board-wrap{width:100%;display:flex;justify-content:center;margin-top:6px}
+    .board{
+      width:90%; padding:8px; display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:14px 14px; box-sizing:border-box; overflow:hidden;
+    }
+    .cell{
+      width:100%; min-width:0; aspect-ratio:1/1; border:none; border-radius:18px;
+      outline:2px solid rgba(194,240,255,.95);
+      background:linear-gradient(180deg, var(--grid-top) 0%, var(--grid-mid) 48%, var(--grid-bot) 100%);
+      box-shadow:inset 0 5px 8px rgba(255,255,255,.28), inset 0 -10px 18px rgba(0,62,180,.22), 0 6px 10px rgba(0,0,0,.1);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900; font-size:30px; color:#fff; text-shadow:0 2px 1px rgba(0,0,0,.16);
+      cursor:pointer; transition:transform .12s ease, outline-color .12s ease, box-shadow .12s ease;
+      position:relative;
+    }
+    .cell:active{transform:scale(.98)}
+    .cell.empty::before{
+      content:""; position:absolute; inset:0; border-radius:inherit;
+      background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0)); pointer-events:none;
+    }
+    .cell.valid{
+      outline:3px solid rgba(130,255,132,.95);
+      box-shadow:0 0 0 5px rgba(130,255,132,.12), inset 0 5px 8px rgba(255,255,255,.28), inset 0 -10px 18px rgba(0,62,180,.22), 0 8px 14px rgba(0,0,0,.16);
+      animation:pulse 1s infinite;
+    }
+    .cell.invalidFlash{animation:shake .25s linear}
+    .cell.filled{color:#f4f7fb}
+
+    .message{
+      width:90%; margin:6px auto 0; min-height:22px; text-align:center;
+      font-weight:700; font-size:12px; text-shadow:0 2px 4px rgba(0,0,0,.28); opacity:.95;
+    }
+
+    .timer-wrap{
+      width:90%; margin:18px auto 0; height:26px; border-radius:999px; padding:3px;
+      background:rgba(117,255,103,.12); border:1px solid rgba(255,255,255,.16);
+      box-shadow:inset 0 2px 4px rgba(255,255,255,.18), 0 7px 10px rgba(0,0,0,.12);
+    }
+    .timer-bar{
+      width:100%; height:100%; border-radius:999px;
+      background:linear-gradient(180deg, var(--green-top), var(--green-bot));
+      box-shadow:inset 0 2px 2px rgba(255,255,255,.3);
+      transition:width .1s linear, background .16s ease;
+      transform-origin:left center;
+    }
+
+    .footer{
+      margin-top:auto; height:70px;
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 16px, rgba(0,0,0,0) 16px 32px),
+        linear-gradient(180deg, var(--footer), var(--footer-2));
+      position:relative; box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .history-btn{
+      position:absolute; left:50%; bottom:32px; transform:translateX(-50%);
+      width:114px; height:114px; border:none; border-radius:50%;
+      background:radial-gradient(circle at 34% 18%, #fff8c8 0%, var(--ball-top) 18%, var(--ball-mid) 48%, var(--ball-bot) 78%, var(--ball-edge) 100%);
+      box-shadow:inset 0 6px 10px rgba(255,255,255,.28), inset 0 -10px 16px rgba(0,0,0,.14), 0 10px 18px rgba(0,0,0,.18);
+      cursor:pointer; z-index:3;
+    }
+    .history-btn .inner{
+      position:absolute; inset:24px; border-radius:50%;
+      background:radial-gradient(circle at 35% 25%, #eef7ff 0%, #dce9f0 75%, #c8d8e1 100%);
+      display:grid; place-items:center; color:#35118e; font-size:42px; font-weight:700;
+      box-shadow:inset 0 2px 0 rgba(255,255,255,.78);
+    }
+
+    .overlay{
+      position:fixed; inset:0; background:rgba(10,0,35,.72);
+      display:none; align-items:center; justify-content:center; z-index:20; padding:18px;
+      backdrop-filter:blur(6px);
+    }
+    .overlay.show{display:flex}
+    .modal{
+      width:min(92vw, 360px); border-radius:28px;
+      background:linear-gradient(180deg,#3d1698,#220059);
+      border:1px solid rgba(255,255,255,.16); box-shadow:0 24px 48px rgba(0,0,0,.35);
+      padding:20px 18px 18px; text-align:center;
+    }
+    .modal h2{margin:0 0 8px;font-size:28px}
+    .modal p{margin:8px 0 14px;line-height:1.35}
+    .modal .small{font-size:14px;opacity:.92}
+    .history-list{
+      max-height:180px;overflow:auto;text-align:left;background:rgba(255,255,255,.08);
+      border-radius:16px;padding:12px;margin:12px 0 14px;line-height:1.6;font-weight:700;
+    }
+    .rule-box{
+      margin:14px 0 8px;text-align:left;background:rgba(255,255,255,.08);
+      border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;
+    }
+    .difficulty-buttons{display:flex;gap:12px;justify-content:center;margin-top:12px}
+    .difficulty-btn{min-width:120px}
+    .modal button{
+      border:none;background:linear-gradient(180deg,#7eff70,#33d920);
+      color:#143f12;font-weight:900;font-size:18px;border-radius:999px;
+      padding:14px 20px;min-width:150px;box-shadow:0 8px 18px rgba(0,0,0,.25);cursor:pointer;
+    }
+
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+    @media (max-width:390px){
+      .ui{padding:16px 12px 0}
+      .topbar{height:68px}
+      .heart{width:42px;height:42px}
+      .balls-panel{height:146px;padding:0 14px}
+      .ball{width:92px;height:92px}
+      .ball .inner{inset:20px;font-size:28px}
+      .board{width:92%;gap:10px;padding:6px}
+      .cell{border-radius:16px;font-size:26px}
+      .timer-wrap{height:24px}
+      .history-btn{width:106px;height:106px}
+      .history-btn .inner{inset:22px;font-size:38px}
+      .difficulty-buttons{flex-direction:column}
+      .difficulty-btn{min-width:0;width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="sky-stripes"></div>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+    <div class="mist"></div>
+
+    <div class="ui">
+      <div class="topbar" id="livesBar"><div class="heart">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <lineargradient id="hg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ff8fa0"></stop>
+              <stop offset="55%" stop-color="#ff4b66"></stop>
+              <stop offset="100%" stop-color="#d81740"></stop>
+            </lineargradient>
+          </defs>
+          <path d="M32 56c-1.4 0-2.7-.5-3.8-1.4C14.6 43.1 6 35.4 6 22.7 6 14.6 12.5 8 20.5 8c4.8 0 9.3 2.2 11.5 6 2.2-3.8 6.7-6 11.5-6C51.5 8 58 14.6 58 22.7c0 12.7-8.6 20.4-22.2 31.9-1.1.9-2.4 1.4-3.8 1.4z" fill="url(#hg)" stroke="#dfeaff" stroke-width="3"></path>
+        </svg></div><div class="heart">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <lineargradient id="hg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ff8fa0"></stop>
+              <stop offset="55%" stop-color="#ff4b66"></stop>
+              <stop offset="100%" stop-color="#d81740"></stop>
+            </lineargradient>
+          </defs>
+          <path d="M32 56c-1.4 0-2.7-.5-3.8-1.4C14.6 43.1 6 35.4 6 22.7 6 14.6 12.5 8 20.5 8c4.8 0 9.3 2.2 11.5 6 2.2-3.8 6.7-6 11.5-6C51.5 8 58 14.6 58 22.7c0 12.7-8.6 20.4-22.2 31.9-1.1.9-2.4 1.4-3.8 1.4z" fill="url(#hg)" stroke="#dfeaff" stroke-width="3"></path>
+        </svg></div><div class="heart">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <lineargradient id="hg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ff8fa0"></stop>
+              <stop offset="55%" stop-color="#ff4b66"></stop>
+              <stop offset="100%" stop-color="#d81740"></stop>
+            </lineargradient>
+          </defs>
+          <path d="M32 56c-1.4 0-2.7-.5-3.8-1.4C14.6 43.1 6 35.4 6 22.7 6 14.6 12.5 8 20.5 8c4.8 0 9.3 2.2 11.5 6 2.2-3.8 6.7-6 11.5-6C51.5 8 58 14.6 58 22.7c0 12.7-8.6 20.4-22.2 31.9-1.1.9-2.4 1.4-3.8 1.4z" fill="url(#hg)" stroke="#dfeaff" stroke-width="3"></path>
+        </svg></div></div>
+
+      <div class="balls-panel" id="ballsPanel"></div>
+
+      <div class="round-row">
+        <div class="badge" id="roundInfo">Rodada 1</div>
+      </div>
+
+      <div class="board-wrap">
+        <div class="board" id="board"><button class="cell empty" data-index="0"></button><button class="cell empty" data-index="1"></button><button class="cell empty" data-index="2"></button><button class="cell empty" data-index="3"></button><button class="cell empty" data-index="4"></button><button class="cell empty" data-index="5"></button><button class="cell empty" data-index="6"></button><button class="cell empty" data-index="7"></button><button class="cell empty" data-index="8"></button><button class="cell empty" data-index="9"></button><button class="cell empty" data-index="10"></button><button class="cell empty" data-index="11"></button><button class="cell empty" data-index="12"></button><button class="cell empty" data-index="13"></button><button class="cell empty" data-index="14"></button><button class="cell empty" data-index="15"></button><button class="cell empty" data-index="16"></button><button class="cell empty" data-index="17"></button><button class="cell empty" data-index="18"></button><button class="cell empty" data-index="19"></button></div>
+      </div>
+
+      <div class="message" id="message">Escolha 1 entre os 3 números sorteados.</div>
+
+      <div class="timer-wrap">
+        <div class="timer-bar" id="timerBar"></div>
+      </div>
+
+      <button class="history-btn" id="historyBtn" aria-label="Histórico de números sorteados">
+        <div class="inner">★</div>
+      </button>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+
+  <div class="overlay show" id="startOverlay">
+    <div class="modal">
+      <h2>Bingo Joy</h2>
+      <p>Escolha o nível antes de começar.</p>
+      <div class="rule-box">
+        • A cada rodada são sorteados 3 números.<br>
+        • Escolha um número e posicione-o em um dos espaços da cartela.<br>
+        • Os números deve ser posicionados em ordem numérica.<br>
+        • O objetivo é preencher todos os espaços da cartela antes que as vidas acabem. <br>
+        • Você tem <strong>10 segundos</strong> por rodada.<br>
+        • <strong>Fácil:</strong> 5 vidas<br>
+        • <strong>Difícil:</strong> 3 vidas
+      </div>
+      <div class="difficulty-buttons">
+        <button id="easyBtn" class="difficulty-btn">Fácil</button>
+        <button id="hardBtn" class="difficulty-btn">Difícil</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="modalOverlay">
+    <div class="modal" id="modalContent"></div>
+  </div>
+
+    
+
+
+</body></html>

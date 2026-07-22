@@ -1,3 +1,9 @@
+import {bingoJoyHostManager} from './BingoJoyHostManager.js';
+import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
+import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
+
+
+
 const TOTAL_CELLS = 20;
 const NUMBERS_PER_ROUND = 3;
 const ROUND_TIME = 10;
@@ -30,6 +36,26 @@ const easyBtn = document.getElementById('easyBtn');
 const hardBtn = document.getElementById('hardBtn');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalContent = document.getElementById('modalContent');
+
+const lobbyId = getCurrentLobbyId() || new URLSearchParams(window.location.search).get('lobbyId');
+const database = realtimeDB.getDatabase();
+const gameDataRef = lobbyId ? realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`) : null;
+
+let isHost = false;
+
+async function initializeBingoUi() {
+    isHost = await getIsHost();
+    console.log("Is host " + isHost);
+
+    if (!isHost) {
+        easyBtn.style.display = 'none';
+        hardBtn.style.display = 'none';
+        startOverlay.classList.add('show');
+        startOverlay.innerHTML = '<div class="overlay-card"><h2>Esperando o host</h2><p>O host está escolhendo a dificuldade da rodada.</p></div>';
+    }
+}
+
+initializeBingoUi();
 
 function heartSVG(){
     return `
@@ -115,21 +141,24 @@ function updateValidPositions(){
 
 function setMessage(text){ messageEl.textContent = text; }
 
-function buildRoundOptions(){
-    const options = [];
-    while(options.length < NUMBERS_PER_ROUND){
-    const n = Math.floor(Math.random()*99) + 1;
-    if(!state.usedNumbers.has(n) && !options.includes(n)){
-        options.push(n);
+function applyGameData(gameData){
+    if(!gameData) return;
+
+    if(typeof gameData.currentRound === 'number'){ 
+        state.round = gameData.currentRound;
     }
+
+    if(Array.isArray(gameData.currentOptions)){
+        state.currentOptions = gameData.currentOptions;
     }
-    return options;
+
+    if(gameData.difficulty){
+        state.difficulty = gameData.difficulty;
+    }
 }
 
 function startRound(){
     clearInterval(state.timerId);
-    state.round += 1;
-    state.currentOptions = buildRoundOptions().sort(() => Math.random() - .5);
     state.selectedNumber = null;
     state.timer = ROUND_TIME;
     roundInfoEl.textContent = `Rodada ${state.round}`;
@@ -318,20 +347,50 @@ function playGameOver(){ [320,240,180].forEach((f,i)=>playTone(f,.22,'sawtooth',
 historyBtn.addEventListener('click', showHistory);
 
 function startWithDifficulty(mode){
+    if (!isHost) return;
+
     state.difficulty = mode;
     state.maxLives = mode === 'easy' ? 5 : 3;
     state.lives = state.maxLives;
     ensureAudio();
+
     startOverlay.classList.remove('show');
     renderLives();
     renderBoard();
-    startRound();
+
+    bingoJoyHostManager.chooseDifficulty(mode);
+    bingoJoyHostManager.startRound();
+
     playTone(480,.08,'triangle',.03,0);
     playTone(620,.08,'triangle',.03,.06);
 }
 
 easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
 hardBtn.addEventListener('click', () => startWithDifficulty('hard'));
+
+if(gameDataRef){
+    realtimeDB.onValue(gameDataRef, (snapshot) => {
+        const previousRound = state.round;
+        const gameData = snapshot.val();
+
+        applyGameData(gameData);
+        renderBalls();
+        renderBoard();
+        updateTimerBar();
+        roundInfoEl.textContent = `Rodada ${state.round}`;
+
+        const hasRoundOptions = Array.isArray(gameData?.currentOptions) && gameData.currentOptions.length > 0;
+        const startedNewRound = Number(gameData?.currentRound ?? 0) > previousRound;
+
+        if (!isHost && hasRoundOptions) {
+            startOverlay.classList.remove('show');
+        }
+
+        if (hasRoundOptions && startedNewRound) {
+            startRound();
+        }
+    });
+}
 
 renderLives();
 renderBoard();

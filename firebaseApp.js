@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getDatabase, ref, set, update, get, remove, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, set, update, get, remove, onValue, onDisconnect, child } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -32,7 +32,8 @@ const realtimeDataBaseMethods = {
   get,
   remove,
   onValue,
-  onDisconnect
+  onDisconnect,
+  child
 };
 
 const authenticationMethods = {

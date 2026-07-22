@@ -6,6 +6,18 @@ let currentLobbyId = null; // Store the current lobby ID
 
 let isHost = false; // Store whether the current user is the host
 
+export function getCurrentLobbyId() {
+    if (!currentLobbyId && typeof window !== 'undefined') {
+        currentLobbyId = new URLSearchParams(window.location.search).get('lobbyId');
+    }
+
+    return currentLobbyId;
+}
+
+export function setCurrentLobbyId(lobbyId) {
+    currentLobbyId = lobbyId;
+}
+
 export async function createLobby() {
 
     const userId = authentication.getUserId();
@@ -29,13 +41,13 @@ export async function createLobby() {
         host: userId,
         players: {
             [userId]: {
-                ready: false,
-                orger:""
+                ready: false
             }
         },
         status: "waiting",
-        miniGame: null,
-        gameData: {},
+        miniGame: "default",
+        GameState: "default",
+        GameData: {}
     };
     console.log(`Room ref ${roomRef} created for lobby ${lobbyId}`);
     console.log(`Creating lobby with ID: ${lobbyId} and data: `, lobbyData);
@@ -53,7 +65,8 @@ export async function createLobby() {
     joinLobby(userId, lobbyId).then((success) => {
         if (success) {
             console.log(`Successfully joined lobby ${lobbyId}`);
-                currentLobbyId = lobbyId;
+            currentLobbyId = lobbyId;
+            setCurrentLobbyId(lobbyId);
 
             // Redirect to lobby page or update UI accordingly
         } else {
@@ -98,18 +111,12 @@ export async function joinLobby(userId, lobbyId) {
         
         // Here you can update your UI based on the new room data
 
-        //Listen if game started, if so, redirect to game page
-        if (updatedRoomData.status === 'playing') {
-            console.log('Game started! Redirecting to game page...');
-            // Redirect to game page or update UI accordingly
-            
-        }
 
         //Only host can start the game, so check if current user is host
         if (isHost) {
-            //Check if all players are ready, if so, start the game
+            //Check if all players are ready, if so, start the game (if has just host wait)
             let allReady = checkAllPlayersReady(lobbyRef, updatedRoomData);
-            
+            console.log("WRRERW");
             if(allReady) {
                 console.log('All players are ready. Starting the game...');
                 menu.showStartGameButton();
@@ -117,11 +124,66 @@ export async function joinLobby(userId, lobbyId) {
             
         }
 
+
+        //Listen if game started, if so, redirect to game page
+        if (updatedRoomData.status === 'playing') {
+            console.log('Game started! Redirecting to game page...');
+            currentLobbyId = lobbyId;
+            setCurrentLobbyId(lobbyId);
+            window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
+        }
+
+        
+
     });
 
 
     return true;
 }
+
+
+export async function getIsHost(){
+    const lobbyId = getCurrentLobbyId();
+    if (!lobbyId) {
+        return false;
+    }
+
+    setCurrentLobbyId(lobbyId);
+
+    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
+    const snapshot = await realtimeDB.get(lobbyRef);
+
+    if (!snapshot.exists()) {
+        return false;
+    }
+
+    const roomData = snapshot.val();
+    const userId = await authentication.waitForUserId();
+
+    if (!userId) {
+        return false;
+    }
+
+    return roomData.host === userId;
+}
+
+export async function getCurrrentLobbyId(){
+    const lobbiesRef = realtimeDB.ref(realtimeDB.getDatabase(), "lobbies");
+    const snapshot = await realtimeDB.get(lobbiesRef);
+
+    if (snapshot.exists()) {
+        const lobbies = snapshot.val();
+
+        for (const lobbyId in lobbies) {
+            const players = lobbies[lobbyId]?.players || {};
+            if (players[userId]) {
+                console.log("Found lobby:", lobbyId);
+                return lobbyId;
+            }
+        }
+    }
+}
+
 
 export async function leaveLobby(userId, lobbyId) {
     const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
@@ -157,14 +219,8 @@ export async function toggleReadyStatus() {
 
 
 function checkAllPlayersReady(lobbyRef, updatedRoomData) {
-    const allReady = Object.values(updatedRoomData.players).every(player => player.ready);
-    if (allReady) {
-        console.log('All players are ready. Starting the game...');
-        //Update status to playing
-        realtimeDB.update(lobbyRef, {
-            status: 'playing'
-        });
-    }
+        const allReady = Object.values(updatedRoomData.players).every(player => player.ready);
+    return allReady;
 }
 
 export function enterLobbyCode(roomCode){
@@ -175,6 +231,9 @@ export function enterLobbyCode(roomCode){
         alert('Lobby does not exist!');
         return false;
     }
+
+    currentLobbyId = roomCode;
+    setCurrentLobbyId(roomCode);
 
     //Enter the lobby
     joinLobby(userId, roomCode).then((success) => {

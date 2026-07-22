@@ -11,26 +11,40 @@ const startGameBtn = document.getElementById("startGameBtn");
 
 const lobbyContainer = document.getElementById("lobbyContainer");
 
-createLobbyBtn.style.display = "none";
-joinLobbyBtn.style.display = "none";
-readyBtn.style.display = "none";
-cleanupBtn.style.display = "none";
-startGameBtn.style.display = "none";
+//===================================
+const minigamesOptionsContainer = document.getElementById("minigames-options-container");
+
+const bingoJoyBtn = document.getElementById("bingoJoyBtn");
+
+function setDisplay(element, value) {
+    if (element) {
+        element.style.display = value;
+    }
+}
+
+//===================================
+
+setDisplay(joinLobbyBtn, "none");
+setDisplay(createLobbyBtn, "none");
+setDisplay(readyBtn, "none");
+setDisplay(cleanupBtn, "none");
+setDisplay(startGameBtn, "none");
 
 if(authenticateBtn) {
-    authenticateBtn.addEventListener("click", () => {
-        authentication.authenticateUser();
+    authenticateBtn.addEventListener("click", async () => {
+        await authentication.authenticateUser();
 
-        createLobbyBtn.style.display = "block";
-        joinLobbyBtn.style.display = "block";
-        readyBtn.style.display = "block";
-        cleanupBtn.style.display = "block";
+        setDisplay(createLobbyBtn, "block");
+        setDisplay(joinLobbyBtn, "block");
+        setDisplay(readyBtn, "block");
+        setDisplay(cleanupBtn, "block");
     });
 }
 if(createLobbyBtn) {
     createLobbyBtn.addEventListener("click", async () => {
         await lobby.createLobby();
-        lobbyContainer.style.display = "block";
+        setDisplay(lobbyContainer, "block");
+
     });
 }
 
@@ -39,16 +53,16 @@ if(joinLobbyBtn) {
     joinLobbyBtn.addEventListener("click", async () => {
         console.log("Join lobby button clicked");
 
-        const roomCode = document.getElementById("roomCodeInput").value;
+        const roomCodeInput = document.getElementById("roomCodeInput");
+        const roomCode = roomCodeInput ? roomCodeInput.value : "";
         let response = await lobby.enterLobbyCode(roomCode);
         if(response === true) {
             console.log("Successfully joined the lobby with code:", roomCode);
         }
-        lobbyContainer.style.display = "block";
+        setDisplay(lobbyContainer, "block");
 
     });
 }
-
 
 if(readyBtn) {
     readyBtn.addEventListener("click", () => {
@@ -68,6 +82,12 @@ if(startGameBtn) {
     });
 }
 
-export function showStartGameButton() {
-    startGameBtn.style.display = "block";
+if(bingoJoyBtn){
 }
+
+export function showStartGameButton() {
+    setDisplay(startGameBtn, "block");
+}
+
+
+
