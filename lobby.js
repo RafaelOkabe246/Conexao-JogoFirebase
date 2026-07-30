@@ -10,7 +10,7 @@ export function getCurrentLobbyId() {
     if (!currentLobbyId && typeof window !== 'undefined') {
         currentLobbyId = new URLSearchParams(window.location.search).get('lobbyId');
     }
-
+    console.log("Current lobby " + currentLobbyId);
     return currentLobbyId;
 }
 

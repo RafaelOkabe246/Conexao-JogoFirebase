@@ -113,7 +113,8 @@ class BingoJoyHostManager {
 
             const setUpGameData = {
                 currentRound: 0,
-                currentNumber: 0,
+                availableRounds: 0,
+                availableNumbers: 0,
                 difficulty: "",
                 winner: null,
                 currentOptions: [],
