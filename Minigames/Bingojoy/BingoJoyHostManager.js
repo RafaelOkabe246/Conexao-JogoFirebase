@@ -13,6 +13,7 @@ class BingoJoyHostManager {
         this.IsHost = false;
 
         this.database = realtimeDB.getDatabase();
+        this.playersRef = null;
         this.playerRef = null;
         this.lobbyRef = null;
         this.gameStateRef = null;
@@ -29,16 +30,26 @@ class BingoJoyHostManager {
         this.currentRound = null;
         this.drawnNumbers = []; // local cache
 
-        this.initializePlayerData();
-
         this.initializeHostState();
     }
 
     async initializePlayerData(){
-        realtimeDB.update();
+        try{
+            await this.ensureRefs();
+
+            const bingoPlayerData = {
+                playerEndedGame: false,
+                wonGame: false
+            }
+            console.log("INITIALIZING PLAYER DATA");
+            await realtimeDB.update(this.playerRef, bingoPlayerData);
+        }
+        catch(err){
+            console.error(err);
+        }
     }
 
-    async ensureHostRefs() {
+    async ensureRefs() {
         if (!this.userId) {
             this.userId = await authentication.waitForUserId();
         }
@@ -50,19 +61,34 @@ class BingoJoyHostManager {
         this.gameStateRef = realtimeDB.ref(this.database, `${lobbyPath}/GameState`);
         this.gameDataRef = realtimeDB.ref(this.database, `${lobbyPath}/GameData`);
         this.playerRef = realtimeDB.ref(this.database, `${lobbyPath}/players/${this.userId}`);
+        this.playersRef = realtimeDB.ref(this.database, `${lobbyPath}/players`);
     }
 
     async initializeHostState() {
-        await this.ensureHostRefs();
+        await this.ensureRefs();
         this.IsHost = await getIsHost();
+
+        await this.initializePlayerData();
 
         if(this.IsHost) {
             this.SetUpGameData();
         }
     }
 
+    GetGameStateRef(){
+        return this.gameStateRef;
+    }
+
     GetIsHost(){
         return this.IsHost;
+    }
+
+    GetPlayerRef(){
+        return this.playerRef;
+    }
+
+    GetPlayersRef(){
+        return this.playersRef;
     }
 
     async chooseDifficulty(difficulty){
@@ -97,8 +123,40 @@ class BingoJoyHostManager {
         });
     }
 
+    async resetGameForAllPlayers() {
+        if(!this.IsHost) return;
+        await this.ensureRefs();
+
+        const initialGameData = {
+            currentRound: 0,
+            availableRounds: 0,
+            availableNumbers: 0,
+            difficulty: "",
+            winner: null,
+            currentOptions: [],
+            selectedNumber: null
+        };
+
+        await realtimeDB.set(this.gameDataRef, initialGameData);
+        await realtimeDB.update(this.gameStateRef, { GameState: 'Playing' });
+
+        const snapshot = await realtimeDB.get(this.playersRef);
+        if (snapshot.exists()) {
+            const updates = {};
+            snapshot.forEach((childSnap) => {
+                const playerId = childSnap.key;
+                if (!playerId) return;
+                updates[`players/${playerId}/playerEndedGame`] = false;
+                updates[`players/${playerId}/wonGame`] = false;
+            });
+            if (Object.keys(updates).length > 0) {
+                await realtimeDB.update(this.lobbyRef, updates);
+            }
+        }
+    }
+
     async SetUpGameData(){
-//Set up the game data
+    //Set up the game data
         try{
             console.log("SET UO");
             //Set up the current minigame
@@ -152,17 +210,51 @@ class BingoJoyHostManager {
 
     runsGame() {
         // Implement the logic to run the game, listen to events here
-        
     }
 
-    endGame() {
-
-
+    async endGame() {
         // Implement the logic to end the game
+        if (await this.allPlayersEndedGame()) {
+            // Show the end game screen or perform any necessary cleanup
+            await realtimeDB.update(this.lobbyRef, {
+                GameState: "Ended"
+            });
+
+            //Now I have to show an ui of the game ended, and show the winner, and the score of each player
+
+            if(this.IsHost=== true){
+
+            }
+            else{
+
+            }
+
+        }
     }
 
     closeGame() {
         // Implement the logic to close the game
+        
+
+    }
+
+
+    async allPlayersEndedGame() {
+        const snapshot = await realtimeDB.get(this.playersRef);
+
+        if (!snapshot.exists()) return false;
+
+        let allEnded = true;
+
+        snapshot.forEach((childSnap) => {
+            const player = childSnap.val() || {};
+            if (player.playerEndedGame !== true) {
+                allEnded = false;
+                return false; // stop iterating
+            }
+        });
+
+        return allEnded;
     }
 
 }

@@ -1,4 +1,4 @@
-//import {bingoJoyHostManager} from './BingoJoyHostManager.js';
+import {bingoJoyHostManager, bingoJoyHostManager as bjManager} from './BingoJoyHostManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
@@ -452,8 +452,7 @@ async function initializeBingoUi() {
     if (!isHost) {
         easyBtn.style.display = 'none';
         hardBtn.style.display = 'none';
-        startOverlay.classList.add('show');
-        startOverlay.innerHTML = '<div class="overlay-card"><h2>Esperando o host</h2><p>O host está escolhendo a dificuldade da rodada.</p></div>';
+        ShowWaitScreen("Esperando o host", "O host está escolhendo a dificuldade da rodada.");
     }
 
     if(gameDataRef && isHost === false)    
@@ -561,23 +560,7 @@ function buildRoundOptions(count = NUMBERS_PER_ROUND, maxNumber = MAX_NUMBER){
     
     const options = _rounds[state.round - 1];
 
-    return options
-
-    /*
-    const available = Array.from({length: maxNumber}, (_, i) => i + 1)
-        .filter(n => !state.usedNumbers.has(n));
-
-    if(count > available.length){
-        throw new Error(`Não há números suficientes livres para gerar ${count} opções.`);
-    }
-
-    const options = [];
-    while(options.length < count){
-        const index = Math.floor(Math.random() * available.length);
-        options.push(available.splice(index, 1)[0]);
-    }
     return options;
-    */
 }
 
 function generateRoundSequence(roundCount, numbersPerRound, maxNumber = MAX_NUMBER){
@@ -695,12 +678,20 @@ function onRoundTimeout(){
     }
 }
 
-function showModal(title, body, buttonText='Fechar', onClose=null){
+function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = true){
+    if(hasButton === false)
+        {
+    modalContent.innerHTML = `
+    <h2>${title}</h2>
+    ${body}
+    `;
+    }
     modalContent.innerHTML = `
     <h2>${title}</h2>
     ${body}
     <button id="modalAction">${buttonText}</button>
     `;
+
     modalOverlay.classList.add('show');
     document.getElementById('modalAction').onclick = () => {
     modalOverlay.classList.remove('show');
@@ -725,26 +716,86 @@ function endGame(win){
     state.gameEnded = true;
     const filled = state.board.filter(v => v !== null).length;
 
+    playerEndedGame(win);
+
+    console.log("End Game");
+
+    /*
     if(win){
-    playWin();
-    showModal(
-        'Você venceu!',
-        `<p>Cartela completa em ordem numérica.</p><p class="small">Rodadas: <strong>${state.round}</strong><br>Vidas restantes: <strong>${state.lives}</strong><br>Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong></p>`,
-        'Jogar novamente',
-        resetGame
+        playWinSound();
+        showModal(
+            'Você venceu!',
+            `<p>Cartela completa em ordem numérica.</p><p class="small">
+            Rodadas: <strong>${state.round}</strong><br>
+            Vidas restantes: <strong>${state.lives}</strong><br>
+            Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong><br>
+            <strong>Aguarde os outros jogadores</strong></p>`,
+            'Jogar novamente',
+            resetGame
+        );
+        }else{
+        playGameOverSound();
+     showModal(
+            'Game Over',
+            `<p>Você perdeu todas as vidas.</p><p class="small">
+            Posições preenchidas: <strong>${filled}/20</strong><br>
+            Rodadas jogadas: <strong>${state.round}</strong><br>
+            Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong><br>
+            <strong>Aguarde os outros jogadores</strong></p></p>`,
+            'Tentar novamente',
+            resetGame
+        );
+    }
+    */
+
+    ShowWaitScreen(
+        win ? 'Você venceu!' : 'Game Over',
+        `<p>Cartela completa em ordem numérica.</p><p class="small">
+        Rodadas: <strong>${state.round}</strong><br>`
     );
-    }else{
-    playGameOver();
-    showModal(
-        'Game Over',
-        `<p>Você perdeu todas as vidas.</p><p class="small">Posições preenchidas: <strong>${filled}/20</strong><br>Rodadas jogadas: <strong>${state.round}</strong><br>Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong></p>`,
-        'Tentar novamente',
-        resetGame
-    );
+    waitForEndGame();
+
+}
+
+async function waitForEndGame(){
+    //Listen if the game ended
+    realtimeDB.onValue(bjManager.GetGameStateRef(), (snapshot) => {
+        const gameData = snapshot.val();
+        if (gameData) {
+            //Game ended, show the final screen
+            console.log("Game ended, showing final screen");
+            ShowEndGameScreen();
+        }
+    });
+}
+
+async function playerEndedGame(hasWon){
+    try{
+        await bjManager.ensureRefs();
+
+        const playerRef = bjManager.GetPlayerRef();
+        if (!playerRef) return;
+
+        await realtimeDB.update(playerRef, {
+            playerEndedGame: true,
+            wonGame: hasWon
+        });
+
+        //Try to end the game if all players have ended
+        await bingoJoyHostManager.endGame();
+    }
+    catch(error){
+        console.error(error);
     }
 }
 
+
+function listenAllPlayers(){
+    //realtimeDB.onValue()
+}
+
 function resetGame(){
+    
     state.maxLives = state.difficulty === 'easy' ? 5 : 3;
     state.lives = state.maxLives;
     state.round = 0;
@@ -758,6 +809,7 @@ function resetGame(){
     renderLives();
     renderBoard();
     startRound();
+    
 }
 
 let audioCtx;
@@ -792,8 +844,8 @@ function playMiss(){
     playTone(250, .12, 'sawtooth', .04, 0);
     playTone(180, .18, 'square', .025, .06);
 }
-function playWin(){ [523,659,784,1047].forEach((f,i)=>playTone(f,.18,'triangle',.03,i*.07)); }
-function playGameOver(){ [320,240,180].forEach((f,i)=>playTone(f,.22,'sawtooth',.03,i*.09)); }
+function playWinSound(){ [523,659,784,1047].forEach((f,i)=>playTone(f,.18,'triangle',.03,i*.07)); }
+function playGameOverSound(){ [320,240,180].forEach((f,i)=>playTone(f,.22,'sawtooth',.03,i*.09)); }
 
 historyBtn.addEventListener('click', showHistory);
 
@@ -840,6 +892,31 @@ async function startWithDifficultyClient(mode){
     //Set the difficulty at game data
     realtimeDB.set(difficultyRef, mode);
 
+}
+
+function ShowWaitScreen(tile, body){
+            startOverlay.classList.add('show');
+    startOverlay.innerHTML = 
+    `<div class="overlay-card"><h2>${tile}</h2><p>${body}</p></div>`;
+
+}
+
+function ShowEndGameScreen(){
+    startOverlay.classList.remove('show');
+
+    if(!bingoJoyHostManager.GetIsHost()) {
+        ShowWaitScreen('Fim de jogo', `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Aguarde o host iniciar uma nova partida.</p>`);
+    } else {
+        showModal(
+            'Fim de jogo',
+            `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>`,
+            'Iniciar nova partida',
+            async () => {
+                await bingoJoyHostManager.resetGameForAllPlayers();
+                startOverlay.classList.remove('show');
+            }
+        );
+    }
 }
 
 easyBtn.addEventListener('click', () => startWithDifficulty('easy'));

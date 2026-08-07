@@ -2,16 +2,25 @@
   "name": "y",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://github.com/RafaelOkabe246/Conexao-JogoFirebase#readme",
+  "bugs": {
+    "url": "https://github.com/RafaelOkabe246/Conexao-JogoFirebase/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelOkabe246/Conexao-JogoFirebase.git"
+  },
   "license": "ISC",
   "author": "",
   "type": "module",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "createClass": "node \"./Minigames/Bingo joy/BingoJoyHostManager.js\""
+    "createClass": "node \"./Minigames/Bingo joy/BingoJoyHostManager.js\"",
+    "start": "node server.js"
   },
   "dependencies": {
-    "firebase": "^12.16.0"
-  },
-  "devDependencies": {}
+    "firebase": "^12.16.0",
+    "node.js": "^0.0.1-security"
+  }
 }
