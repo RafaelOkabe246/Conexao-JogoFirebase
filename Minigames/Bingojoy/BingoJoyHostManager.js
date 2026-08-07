@@ -138,7 +138,7 @@ class BingoJoyHostManager {
         };
 
         await realtimeDB.set(this.gameDataRef, initialGameData);
-        await realtimeDB.update(this.gameStateRef, { GameState: 'playing' });
+        await realtimeDB.update(this.gameStateRef, { GameState: 'starting' });
 
         const snapshot = await realtimeDB.get(this.playersRef);
         if (snapshot.exists()) {
