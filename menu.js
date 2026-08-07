@@ -47,6 +47,7 @@ if(createLobbyBtn) {
         await lobby.createLobby();
         setDisplay(lobbyContainer, "block");
         setDisplay(lobbyIdDisplay, "block");
+        lobbyIdDisplay.textContent = `Lobby Id: ${lobby.getCurrentLobbyId()}`;
     });
 }
 
