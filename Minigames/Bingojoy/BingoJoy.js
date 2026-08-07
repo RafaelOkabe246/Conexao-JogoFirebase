@@ -914,6 +914,7 @@ function ShowEndGameScreen(){
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
                 startOverlay.classList.remove('show');
+                //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${getCurrentLobbyId()}`;
             }
         );
     }

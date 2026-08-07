@@ -151,28 +151,8 @@ class BingoJoyHostManager {
             });
             if (Object.keys(updates).length > 0) {
                 await realtimeDB.update(this.lobbyRef, updates);
-                await realtimeDB.update(this.lobbyRef, { reloadTimestamp: Date.now() });
             }
         }
-
-        reloadPage();
-        
-    }
-
-    async realoadPage(){
-        let _lastReloadTs = 0;
-        const lobbyPath = `lobbies/${getCurrentLobbyId()}`;
-        const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), lobbyPath);
-
-        realtimeDB.onValue(lobbyRef, (snap) => {
-        const val = snap.exists() ? snap.val() : null;
-        if (!val) return;
-        const ts = val.reloadTimestamp || 0;
-        if (ts && ts !== _lastReloadTs) {
-            _lastReloadTs = ts;
-            window.location.reload();
-        }
-        });
     }
 
     async SetUpGameData(){
@@ -182,11 +162,11 @@ class BingoJoyHostManager {
             //Set up the current minigame
             await realtimeDB.update(this.lobbyRef, {
                 miniGame: 'Bingo Joy',
-                GameState: "Starting"
+                GameState: "starting"
             });
 
             const initialGameState = {
-                GameState: 'playing'
+                GameState: 'starting'
             };
 
             const setUpGameData = {
