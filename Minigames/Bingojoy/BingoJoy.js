@@ -719,8 +719,8 @@ function endGame(win){
     playerEndedGame(win);
 
     console.log("End Game");
-
-    /*
+/*
+    
     if(win){
         playWinSound();
         showModal(
