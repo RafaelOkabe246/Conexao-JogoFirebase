@@ -870,7 +870,7 @@ if (!isHost) return;
     playTone(480,.08,'triangle',.03,0);
     playTone(620,.08,'triangle',.03,.06);
 
-    
+    bingoJoyHostManager.SetGameState('playing');
 }
 
 async function startWithDifficultyClient(mode){
@@ -906,6 +906,7 @@ function ShowEndGameScreen(){
 
     if(!bingoJoyHostManager.GetIsHost()) {
         ShowWaitScreen('Fim de jogo', `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Aguarde o host iniciar uma nova partida.</p>`);
+        bingoJoyHostManager.waitHostRestartGame();
     } else {
         showModal(
             'Fim de jogo',
@@ -914,11 +915,12 @@ function ShowEndGameScreen(){
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
                 startOverlay.classList.remove('show');
-                //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${getCurrentLobbyId()}`;
+                window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${getCurrentLobbyId()}`;
             }
         );
     }
 }
+
 
 easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
 hardBtn.addEventListener('click', () => startWithDifficulty('hard'));

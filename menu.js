@@ -8,6 +8,7 @@ const joinLobbyBtn = document.getElementById("joinLobbyBtn");
 const readyBtn = document.getElementById("readyBtn");
 const cleanupBtn = document.getElementById("cleanupBtn");
 const startGameBtn = document.getElementById("startGameBtn");
+const lobbyIdDisplay = document.getElementById("lobbyId");
 
 const lobbyContainer = document.getElementById("lobbyContainer");
 
@@ -29,6 +30,7 @@ setDisplay(createLobbyBtn, "none");
 setDisplay(readyBtn, "none");
 setDisplay(cleanupBtn, "none");
 setDisplay(startGameBtn, "none");
+setDisplay(lobbyIdDisplay, "none");
 
 if(authenticateBtn) {
     authenticateBtn.addEventListener("click", async () => {
@@ -44,7 +46,7 @@ if(createLobbyBtn) {
     createLobbyBtn.addEventListener("click", async () => {
         await lobby.createLobby();
         setDisplay(lobbyContainer, "block");
-
+        setDisplay(lobbyIdDisplay, "block");
     });
 }
 

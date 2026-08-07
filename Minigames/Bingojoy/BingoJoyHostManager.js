@@ -155,6 +155,21 @@ class BingoJoyHostManager {
         }
     }
 
+    async waitHostRestartGame() {
+        if(!this.IsHost) return;
+        await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
+            const state = snapshot.val();
+            if(state && state.GameState === 'playing') {
+                window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${this.lobbyId}`;
+            }
+        });
+    }
+
+    async SetGameState(state) {
+        if(!this.IsHost) return;
+        await realtimeDB.update(this.gameStateRef, { GameState: state });
+    }
+
     async SetUpGameData(){
     //Set up the game data
         try{
