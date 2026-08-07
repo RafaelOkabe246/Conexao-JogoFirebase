@@ -131,7 +131,7 @@ class BingoJoyHostManager {
             currentRound: 0,
             availableRounds: 0,
             availableNumbers: 0,
-            difficulty: "",
+            //difficulty: "",
             winner: null,
             currentOptions: [],
             selectedNumber: null
@@ -151,8 +151,28 @@ class BingoJoyHostManager {
             });
             if (Object.keys(updates).length > 0) {
                 await realtimeDB.update(this.lobbyRef, updates);
+                await realtimeDB.update(this.lobbyRef, { reloadTimestamp: Date.now() });
             }
         }
+
+        reloadPage();
+        
+    }
+
+    async realoadPage(){
+        let _lastReloadTs = 0;
+        const lobbyPath = `lobbies/${getCurrentLobbyId()}`;
+        const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), lobbyPath);
+
+        realtimeDB.onValue(lobbyRef, (snap) => {
+        const val = snap.exists() ? snap.val() : null;
+        if (!val) return;
+        const ts = val.reloadTimestamp || 0;
+        if (ts && ts !== _lastReloadTs) {
+            _lastReloadTs = ts;
+            window.location.reload();
+        }
+        });
     }
 
     async SetUpGameData(){
