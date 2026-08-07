@@ -44,10 +44,14 @@ if(authenticateBtn) {
 }
 if(createLobbyBtn) {
     createLobbyBtn.addEventListener("click", async () => {
-        await lobby.createLobby();
+        const lobbyId = await lobby.createLobby();
+        if (!lobbyId) {
+            console.error('Failed to create or join lobby.');
+            return;
+        }
         setDisplay(lobbyContainer, "block");
         setDisplay(lobbyIdDisplay, "block");
-        lobbyIdDisplay.textContent = await `Lobby Id: ${lobby.getCurrentLobbyId()}`;
+        lobbyIdDisplay.textContent = `Lobby Id: ${lobbyId}`;
     });
 }
 

@@ -51,27 +51,25 @@ export async function createLobby() {
     };
     console.log(`Room ref ${roomRef} created for lobby ${lobbyId}`);
     console.log(`Creating lobby with ID: ${lobbyId} and data: `, lobbyData);
-    
-    await realtimeDB.set(roomRef, lobbyData)
-        .then(() => {
-            console.log(`Lobby ${lobbyId} created successfully.`);
-            // Redirect to lobby page or update UI accordingly
-        })
-        .catch((error) => {
-            console.error(`Error creating lobby ${lobbyId}:`, error);
-        });
 
-    
-    joinLobby(userId, lobbyId).then((success) => {
-        if (success) {
-            console.log(`Successfully joined lobby ${lobbyId}`);
-            currentLobbyId = lobbyId;
-            setCurrentLobbyId(lobbyId);
+    try {
+        await realtimeDB.set(roomRef, lobbyData);
+        console.log(`Lobby ${lobbyId} created successfully.`);
+    } catch (error) {
+        console.error(`Error creating lobby ${lobbyId}:`, error);
+        return null;
+    }
 
-            // Redirect to lobby page or update UI accordingly
-        } else {
-            console.error(`Failed to join lobby ${lobbyId}`);
-        }});   
+    const success = await joinLobby(userId, lobbyId);
+    if (!success) {
+        console.error(`Failed to join lobby ${lobbyId}`);
+        return null;
+    }
+
+    console.log(`Successfully joined lobby ${lobbyId}`);
+    currentLobbyId = lobbyId;
+    setCurrentLobbyId(lobbyId);
+    return lobbyId;
 
 }
 
@@ -82,7 +80,7 @@ export async function joinLobby(userId, lobbyId) {
     const roomSnapshot = await realtimeDB.get(lobbyRef);
     if(!roomSnapshot.exists()) {
         console.error(`Lobby ${lobbyId} does not exist.`);
-        return;
+        return false;
     }
 
     const roomData = roomSnapshot.val();
@@ -223,29 +221,26 @@ function checkAllPlayersReady(lobbyRef, updatedRoomData) {
     return allReady;
 }
 
-export function enterLobbyCode(roomCode){
-
+export async function enterLobbyCode(roomCode){
     const userId = authentication.getUserId();
     const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${roomCode}`);
-    if(!lobbyRef) {
+
+    const roomSnapshot = await realtimeDB.get(lobbyRef);
+    if(!roomSnapshot.exists()) {
         alert('Lobby does not exist!');
         return false;
     }
 
+    const success = await joinLobby(userId, roomCode);
+    if (!success) {
+        console.error(`Failed to join lobby ${roomCode}`);
+        return false;
+    }
+
+    console.log(`Successfully joined lobby ${roomCode}`);
     currentLobbyId = roomCode;
     setCurrentLobbyId(roomCode);
-
-    //Enter the lobby
-    joinLobby(userId, roomCode).then((success) => {
-        if (success) {
-            console.log(`Successfully joined lobby ${roomCode}`);
-            // Redirect to lobby page or update UI accordingly
-            return true;
-        } else {
-            console.error(`Failed to join lobby ${roomCode}`);
-            return false;
-        }
-    });
+    return true;
 }
 
 
