@@ -64,13 +64,7 @@ async function initializeBingoUi() {
     {
         console.log("Dificult data ref  " + difficultyRef.toString());
 
-        realtimeDB.onValue(bingoJoyHostManager.GetGameStateRef(), (snapshot)=>{
-            const response = snapshot.val().toString();
-            
-            if(response === "starting"){
-                
-            }
-        });
+        
         realtimeDB.onValue(difficultyRef, (snapshot)=>{
                     const response = snapshot.val().toString();
                     console.log("GEer");
