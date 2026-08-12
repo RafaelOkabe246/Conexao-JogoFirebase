@@ -53,6 +53,8 @@ const MAX_NUMBER = 99;
 async function initializeBingoUi() {
     isHost = await getIsHost();
     console.log("Is host " + isHost);
+    
+    modalOverlay.classList.remove('show');
 
     if (!isHost) {
         easyBtn.style.display = 'none';
@@ -68,8 +70,6 @@ async function initializeBingoUi() {
             const response = snapshot.val().toString();
             
             if(response === "starting"){
-
-                
                 realtimeDB.onValue(difficultyRef, (snapshot)=>{
                     const response = snapshot.val().toString();
                     console.log("GEer");
