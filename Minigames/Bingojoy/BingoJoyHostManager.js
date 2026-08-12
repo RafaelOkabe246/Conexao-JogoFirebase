@@ -160,7 +160,7 @@ class BingoJoyHostManager {
         await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
             const state = snapshot.val();
             if(state && state.GameState === 'playing') {
-
+                
             }
         });
     }
