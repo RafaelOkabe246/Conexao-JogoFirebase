@@ -123,7 +123,7 @@ class BingoJoyHostManager {
         });
     }
 
-    async resetGameForAllPlayers() {
+    async resetGameForAllPlayers(callbackRestartGame) {
         if(!this.IsHost) return;
         await this.ensureRefs();
 
@@ -153,6 +153,8 @@ class BingoJoyHostManager {
                 await realtimeDB.update(this.lobbyRef, updates);
             }
         }
+
+        callbackRestartGame();
     }
 
     async waitHostRestartGame() {
