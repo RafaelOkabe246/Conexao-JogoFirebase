@@ -476,7 +476,7 @@ async function startWithDifficultyClient(mode){
 }
 
 function ShowWaitScreen(tile, body){
-            startOverlay.classList.add('show');
+    startOverlay.classList.add('show');
     startOverlay.innerHTML = 
     `<div class="overlay-card"><h2>${tile}</h2><p>${body}</p></div>`;
 
@@ -495,7 +495,9 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
-                            startOverlay.classList.add('show');
+                    modalOverlay.classList.remove('show');
+
+                startOverlay.classList.add('show');
 
             }
         );
