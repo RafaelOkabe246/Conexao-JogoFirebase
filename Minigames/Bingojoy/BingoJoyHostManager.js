@@ -153,8 +153,13 @@ class BingoJoyHostManager {
                 await realtimeDB.update(this.lobbyRef, updates);
             }
         }
+        
+        setTimeout(() => {
+            console.log("This runs after 1 second");
+                    callbackRestartGame();
 
-        callbackRestartGame();
+        }, 1000);
+
     }
 
     async waitHostRestartGame() {
