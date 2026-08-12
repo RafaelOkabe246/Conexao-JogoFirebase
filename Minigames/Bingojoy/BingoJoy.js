@@ -476,8 +476,8 @@ async function startWithDifficultyClient(mode){
 }
 
 function ShowWaitScreen(tile, body){
-    modalOverlay.classList.add('show');
-    modalContent.innerHTML = 
+    startOverlay.classList.add('show');
+    startOverlay.innerHTML = 
     `<div class="overlay-card"><h2>${tile}</h2><p>${body}</p></div>`;
 
 }
