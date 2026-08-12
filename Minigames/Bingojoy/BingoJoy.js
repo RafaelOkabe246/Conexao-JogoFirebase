@@ -66,13 +66,13 @@ async function initializeBingoUi() {
 
         
         realtimeDB.onValue(difficultyRef, (snapshot)=>{
-                    const response = snapshot.val().toString();
-                    console.log("GEer");
-                    if(response === "easy" || response === "hard"){
+            const response = snapshot.val().toString();
+            console.log("GEer");
+            if(response === "easy" || response === "hard"){
 
-                        startWithDifficultyClient(response);
-                    }
-                });
+                startWithDifficultyClient(response);
+            }
+        });
 
     }
 }
