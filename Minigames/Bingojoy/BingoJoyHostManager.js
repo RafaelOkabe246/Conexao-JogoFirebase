@@ -131,7 +131,7 @@ class BingoJoyHostManager {
             currentRound: 0,
             availableRounds: 0,
             availableNumbers: 0,
-            //difficulty: "",
+            difficulty: "hard",
             winner: null,
             currentOptions: [],
             selectedNumber: null

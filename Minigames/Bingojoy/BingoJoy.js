@@ -495,7 +495,7 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
-
+                
             }
         );
     }
