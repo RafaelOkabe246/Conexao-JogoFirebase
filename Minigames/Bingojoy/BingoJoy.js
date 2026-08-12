@@ -465,8 +465,6 @@ async function startWithDifficultyClient(mode){
     ensureAudio();
     startOverlay.classList.remove('show');
 
-    startOverlay.classList.remove('show');
-
 
     renderLives();
     renderBoard();
