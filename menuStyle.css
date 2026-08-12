@@ -1,0 +1,480 @@
+
+    /* =========================
+       CONFIGURAÇÕES GERAIS
+    ========================= */
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+            radial-gradient(circle at top left, #6c5ce7, transparent 35%),
+            radial-gradient(circle at bottom right, #00cec9, transparent 35%),
+            #17152b;
+
+        color: white;
+        padding: 30px;
+    }
+
+
+    /* =========================
+       TÍTULO / MENU PRINCIPAL
+    ========================= */
+
+    body > div:first-child {
+        width: 100%;
+        max-width: 650px;
+
+        text-align: center;
+
+        background: rgba(20, 18, 45, 0.92);
+
+        border: 3px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+
+        padding: 40px;
+
+        box-shadow:
+            0 20px 50px rgba(0, 0, 0, 0.4),
+            inset 0 0 30px rgba(255, 255, 255, 0.03);
+    }
+
+
+    h1 {
+        font-size: 4rem;
+        font-weight: 900;
+
+        margin-bottom: 10px;
+
+        color: #ffe66d;
+
+        text-shadow:
+            0 5px 0 #c49b00,
+            0 10px 20px rgba(0, 0, 0, 0.4);
+
+        letter-spacing: 2px;
+    }
+
+
+    p {
+        color: #dcd9f5;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+    }
+
+
+    /* =========================
+       LINK
+    ========================= */
+
+    a {
+        display: inline-block;
+
+        margin-bottom: 20px;
+
+        color: #74f2ce;
+        font-weight: bold;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition: 0.2s;
+    }
+
+    a:hover {
+        color: #ffffff;
+        transform: scale(1.05);
+    }
+
+
+    /* =========================
+       LISTAS
+    ========================= */
+
+    ul {
+        list-style: none;
+
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+
+        margin: 15px 0;
+    }
+
+    li {
+        display: flex;
+    }
+
+
+    /* =========================
+       BOTÕES
+    ========================= */
+
+    button {
+        border: none;
+
+        padding: 14px 22px;
+
+        border-radius: 12px;
+
+        background: #6c5ce7;
+        color: white;
+
+        font-size: 1rem;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 5px 0 #4838a8,
+            0 8px 15px rgba(0, 0, 0, 0.25);
+
+        transition:
+            transform 0.15s,
+            box-shadow 0.15s,
+            background 0.15s;
+    }
+
+    button:hover {
+        background: #8175ed;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 7px 0 #4838a8,
+            0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button:active {
+        transform: translateY(4px);
+
+        box-shadow:
+            0 2px 0 #4838a8,
+            0 4px 8px rgba(0, 0, 0, 0.25);
+    }
+
+
+    /* =========================
+       BOTÕES DE AUTENTICAÇÃO
+    ========================= */
+
+    #authenticateBtn {
+        background: #00b894;
+        box-shadow: 0 5px 0 #007f69;
+    }
+
+    #authenticateBtn:hover {
+        background: #19cda7;
+    }
+
+
+    #cleanupBtn {
+        background: #636e72;
+        box-shadow: 0 5px 0 #3d4244;
+    }
+
+    #cleanupBtn:hover {
+        background: #747f83;
+    }
+
+
+    /* =========================
+       ÁREA DE ENTRAR NA SALA
+    ========================= */
+
+    body > div:nth-child(2) {
+        width: 100%;
+        max-width: 650px;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        margin-top: 20px;
+
+        padding: 20px;
+
+        background: rgba(20, 18, 45, 0.92);
+
+        border-radius: 18px;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    input {
+        flex: 1;
+
+        min-width: 0;
+
+        padding: 14px 16px;
+
+        border: 2px solid #39355f;
+        border-radius: 10px;
+
+        background: #111027;
+        color: white;
+
+        font-size: 1rem;
+
+        outline: none;
+
+        transition: 0.2s;
+    }
+
+    input:focus {
+        border-color: #74f2ce;
+
+        box-shadow:
+            0 0 0 3px rgba(116, 242, 206, 0.15);
+    }
+
+    input::placeholder {
+        color: #777394;
+    }
+
+
+    /* =========================
+       LOBBY
+    ========================= */
+
+    .lobby-container {
+        width: 100%;
+        max-width: 700px;
+
+        margin-top: 25px;
+
+        padding: 30px;
+
+        background: rgba(20, 18, 45, 0.96);
+
+        border: 2px solid rgba(116, 242, 206, 0.25);
+
+        border-radius: 24px;
+
+        box-shadow:
+            0 20px 50px rgba(0, 0, 0, 0.4);
+
+        text-align: center;
+    }
+
+    .lobby-container h2 {
+        font-size: 2.2rem;
+
+        margin-bottom: 15px;
+
+        color: #74f2ce;
+    }
+
+
+    /* =========================
+       LISTA DE JOGADORES
+    ========================= */
+
+    #playerList {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        margin: 20px 0;
+    }
+
+    #playerList li {
+        padding: 12px 16px;
+
+        border-radius: 10px;
+
+        background: #29254b;
+
+        text-align: left;
+
+        border-left: 4px solid #ffe66d;
+    }
+
+
+    /* =========================
+       ID DA SALA
+    ========================= */
+
+    #lobbyId {
+        display: inline-block;
+
+        margin-left: 5px;
+
+        padding: 5px 10px;
+
+        border-radius: 6px;
+
+        background: #111027;
+
+        color: #ffe66d;
+
+        font-family: monospace;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+
+    /* =========================
+       BOTÃO READY
+    ========================= */
+
+    #readyBtn {
+        background: #00b894;
+        box-shadow: 0 5px 0 #007f69;
+
+        margin: 5px;
+    }
+
+    #readyBtn:hover {
+        background: #19cda7;
+    }
+
+
+    /* =========================
+       START GAME
+    ========================= */
+
+    #startGameBtn {
+        background: #fdcb6e;
+        color: #302400;
+
+        box-shadow: 0 5px 0 #c49538;
+
+        margin: 5px;
+    }
+
+    #startGameBtn:hover {
+        background: #ffdc91;
+    }
+
+
+    /* =========================
+       LEAVE
+    ========================= */
+
+    #leaveBtn {
+        background: #d63031;
+        box-shadow: 0 5px 0 #8f1f20;
+
+        margin: 5px;
+    }
+
+    #leaveBtn:hover {
+        background: #e34a4a;
+    }
+
+
+    /* =========================
+       SELEÇÃO DE MINIGAMES
+    ========================= */
+
+    .minigames-options-container {
+        margin-top: 30px;
+
+        padding-top: 25px;
+
+        border-top: 2px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .minigames-options-container::before {
+        content: "CHOOSE A MINIGAME";
+
+        display: block;
+
+        margin-bottom: 15px;
+
+        color: #ffe66d;
+
+        font-size: 0.9rem;
+        font-weight: bold;
+
+        letter-spacing: 2px;
+    }
+
+
+    .minigames-options-container ul {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+
+    #bingoJoyBtn {
+        background: #e84393;
+
+        box-shadow: 0 5px 0 #9f2765;
+
+        font-size: 1.1rem;
+
+        padding: 16px 30px;
+    }
+
+    #bingoJoyBtn:hover {
+        background: #f05ca4;
+    }
+
+
+    /* =========================
+       RESPONSIVIDADE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+        body {
+            padding: 15px;
+        }
+
+        body > div:first-child {
+            padding: 25px 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+        }
+
+        body > div:nth-child(2) {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        label {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        body > div:nth-child(2) button {
+            width: 100%;
+        }
+
+        ul {
+            flex-direction: column;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        .lobby-container {
+            padding: 25px 15px;
+        }
+    }
