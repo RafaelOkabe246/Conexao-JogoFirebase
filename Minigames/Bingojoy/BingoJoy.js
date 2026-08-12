@@ -68,7 +68,10 @@ async function initializeBingoUi() {
             const response = snapshot.val().toString();
             
             if(response === "starting"){
-                realtimeDB.onValue(difficultyRef, (snapshot)=>{
+                
+            }
+        });
+        realtimeDB.onValue(difficultyRef, (snapshot)=>{
                     const response = snapshot.val().toString();
                     console.log("GEer");
                     if(response === "easy" || response === "hard"){
@@ -76,9 +79,6 @@ async function initializeBingoUi() {
                         startWithDifficultyClient(response);
                     }
                 });
-            }
-        });
-
 
     }
 }
@@ -334,34 +334,6 @@ function endGame(win){
     playerEndedGame(win);
 
     console.log("End Game");
-/*
-    
-    if(win){
-        playWinSound();
-        showModal(
-            'Você venceu!',
-            `<p>Cartela completa em ordem numérica.</p><p class="small">
-            Rodadas: <strong>${state.round}</strong><br>
-            Vidas restantes: <strong>${state.lives}</strong><br>
-            Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong><br>
-            <strong>Aguarde os outros jogadores</strong></p>`,
-            'Jogar novamente',
-            resetGame
-        );
-        }else{
-        playGameOverSound();
-     showModal(
-            'Game Over',
-            `<p>Você perdeu todas as vidas.</p><p class="small">
-            Posições preenchidas: <strong>${filled}/20</strong><br>
-            Rodadas jogadas: <strong>${state.round}</strong><br>
-            Nível: <strong>${state.difficulty === 'easy' ? 'Fácil' : 'Difícil'}</strong><br>
-            <strong>Aguarde os outros jogadores</strong></p></p>`,
-            'Tentar novamente',
-            resetGame
-        );
-    }
-    */
 
     ShowWaitScreen(
         win ? 'Você venceu!' : 'Game Over',
