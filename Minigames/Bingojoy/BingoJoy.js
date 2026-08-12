@@ -494,7 +494,7 @@ function ShowEndGameScreen(){
             `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>`,
             'Iniciar nova partida',
             async () => {
-                await bingoJoyHostManager.resetGameForAllPlayers(restartGameCallback);
+                await bingoJoyHostManager.resetGameForAllPlayers();
 
             }
         );

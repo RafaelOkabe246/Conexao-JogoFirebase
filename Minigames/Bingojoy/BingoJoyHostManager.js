@@ -123,7 +123,7 @@ class BingoJoyHostManager {
         });
     }
 
-    async resetGameForAllPlayers(callbackRestartGame) {
+    async resetGameForAllPlayers() {
         if(!this.IsHost) return;
         await this.ensureRefs();
 
@@ -154,12 +154,6 @@ class BingoJoyHostManager {
             }
         }
         
-        setTimeout(() => {
-            console.log("This runs after 1 second");
-                    callbackRestartGame();
-
-        }, 1000);
-
     }
 
     async waitHostRestartGame() {
