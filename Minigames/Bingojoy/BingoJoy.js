@@ -50,6 +50,21 @@ let _playerRounds;
 const MAX_NUMBER = 99;
 
 
+showCustomModal({
+  title: 'Fim de jogo',
+  body: `
+    <p>Todos os jogadores terminaram o jogo.</p>
+    <p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>
+  `,
+  buttonText: 'Iniciar nova partida',
+  onConfirm: async () => {
+    await bingoJoyHostManager.resetGameForAllPlayers();
+    startOverlay.classList.remove('show');
+    startWithDifficulty(state.difficulty);
+  }
+});
+
+
 async function initializeBingoUi() {
     isHost = await getIsHost();
     console.log("Is host " + isHost);
@@ -495,16 +510,41 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
-                renderLives();
-                renderBoard();      
             }
         );
     }
 }
 
-function restartGameCallback(){
-                startOverlay.classList.remove('show');
-                startWithDifficulty(state.difficulty);
+function showCustomModal({
+  title = 'Bingo Joy',
+  body = '',
+  buttonText = 'Fechar',
+  onConfirm = null,
+  showButton = true
+} = {}) {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+
+  if (!overlay || !content) {
+    console.error('Modal elements not found');
+    return;
+  }
+
+  content.innerHTML = `
+    <h2>${title}</h2>
+    ${body}
+    ${showButton ? `<button id="modalAction">${buttonText}</button>` : ''}
+  `;
+
+  overlay.classList.add('show');
+
+  const actionBtn = document.getElementById('modalAction');
+  if (actionBtn) {
+    actionBtn.addEventListener('click', () => {
+      overlay.classList.remove('show');
+      if (onConfirm) onConfirm();
+    });
+  }
 }
 
 
