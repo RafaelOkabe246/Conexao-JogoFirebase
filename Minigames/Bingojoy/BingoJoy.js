@@ -510,6 +510,7 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.resetGameForAllPlayers();
+                showCustomModal();
             }
         );
     }
@@ -529,7 +530,7 @@ function showCustomModal({
     console.error('Modal elements not found');
     return;
   }
-
+  console.log("AAAAA");
   content.innerHTML = `
     <h2>${title}</h2>
     ${body}
