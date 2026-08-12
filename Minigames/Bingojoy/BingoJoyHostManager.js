@@ -156,11 +156,11 @@ class BingoJoyHostManager {
     }
 
     async waitHostRestartGame() {
-        if(!this.IsHost) return;
+
         await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
             const state = snapshot.val();
             if(state && state.GameState === 'playing') {
-                window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${this.lobbyId}`;
+
             }
         });
     }
