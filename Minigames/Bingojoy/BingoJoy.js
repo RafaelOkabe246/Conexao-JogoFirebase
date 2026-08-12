@@ -72,7 +72,6 @@ async function initializeBingoUi() {
                     const response = snapshot.val().toString();
                     console.log("GEer");
                     if(response === "easy" || response === "hard"){
-                            modalOverlay.classList.remove('show');
 
                         startWithDifficultyClient(response);
                     }
