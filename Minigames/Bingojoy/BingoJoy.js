@@ -464,6 +464,10 @@ async function startWithDifficultyClient(mode){
     state.lives = state.maxLives;
     ensureAudio();
     startOverlay.classList.remove('show');
+
+    startOverlay.classList.remove('show');
+
+
     renderLives();
     renderBoard();
     startRound();
