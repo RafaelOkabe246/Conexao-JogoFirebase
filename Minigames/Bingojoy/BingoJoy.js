@@ -54,8 +54,6 @@ async function initializeBingoUi() {
     isHost = await getIsHost();
     console.log("Is host " + isHost);
     
-    modalOverlay.classList.remove('show');
-
     if (!isHost) {
         easyBtn.style.display = 'none';
         hardBtn.style.display = 'none';
