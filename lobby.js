@@ -124,7 +124,7 @@ export async function joinLobby(userId, lobbyId) {
 
 
         //Listen if game started, if so, redirect to game page
-        if (updatedRoomData.status === 'playing') {
+        if (updatedRoomData.status === 'starting') {
             console.log('Game started! Redirecting to game page...');
             currentLobbyId = lobbyId;
             setCurrentLobbyId(lobbyId);

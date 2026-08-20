@@ -485,6 +485,7 @@ function ShowWaitScreen(tile, body){
 }
 
 function ShowEndGameScreen(){
+    /*
     startOverlay.classList.remove('show');
 
     if(!bingoJoyHostManager.GetIsHost()) {
@@ -500,10 +501,14 @@ function ShowEndGameScreen(){
                     modalOverlay.classList.remove('show');
 
                 startOverlay.classList.add('show');
+                            window.location.href = new URL('../../index.html', import.meta.url).href;
 
             }
         );
     }
+    */
+    window.location.href = new URL('../../index.html', import.meta.url).href;
+
 }
 
 

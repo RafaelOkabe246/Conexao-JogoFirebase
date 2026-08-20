@@ -158,9 +158,14 @@ class BingoJoyHostManager {
 
     async waitHostRestartGame() {
         if(!this.IsHost) return;
+        window.location.href = '../../index.html';
+
         await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
             const state = snapshot.val();
-            if(state && state.GameState === 'playing') {
+            if(state && state.GameState === 'playing') 
+                {
+                    console.log("Back to menu");
+
             }
         });
     }
