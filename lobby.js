@@ -267,6 +267,6 @@ export async function startGame() {
 
     // Update the lobby status to 'playing'
     await realtimeDB.update(lobbyRef, {
-        status: 'playing'
+        status: 'starting'
     });
 }
