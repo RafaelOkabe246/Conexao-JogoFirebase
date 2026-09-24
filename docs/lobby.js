@@ -139,7 +139,7 @@ export async function joinLobby(userId, lobbyId) {
             setCurrentLobbyId(lobbyId);
 
             //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
-            window.location.href = returnMinigamePage();
+            window.location.href = returnMinigamePage(updatedRoomData.miniGame);
         }
     });
 
@@ -147,7 +147,7 @@ export async function joinLobby(userId, lobbyId) {
     return true;
 }
 
-function returnMinigamePage() {
+function returnMinigamePage(minigame) {
     
     switch (minigame) {
         case "Bingo Joy":
