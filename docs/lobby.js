@@ -138,8 +138,8 @@ export async function joinLobby(userId, lobbyId) {
             currentLobbyId = lobbyId;
             setCurrentLobbyId(lobbyId);
 
-            //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
-            window.location.href = returnMinigamePage(updatedRoomData.miniGame);
+            window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
+            //window.location.href = returnMinigamePage(updatedRoomData.miniGame);
         }
     });
 
