@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Maior ou Menor</title>
+  <link rel="stylesheet" href="duelo-mais-ou-menos.css" />
+  <script src="duelo-mais-ou-menos.js" defer></script>
+
+</head>
+<body>
+  <div class="app">
+    <section id="introScreen" class="screen active">
+      <div class="intro-card">
+        <div class="accent-line"></div>
+        <h1>MAIOR OU MENOR</h1>
+        <p>Vire cartas e adivinhe se a próxima será <strong>maior</strong> ou <strong>menor</strong> que a carta aberta.</p>
+        <p>Você tem <strong>15 segundos por jogada</strong>. Se o tempo acabar, a sequência atual é descartada.</p>
+        <p>A cada <strong>3 acertos seguidos</strong>, você começa a marcar pontos. A partir daí, cada novo acerto na mesma sequência vale <strong>+1 ponto extra</strong>.</p>
+        <p>Quando a sequência estiver pontuando, use o botão <strong>parar</strong> para guardar os pontos. Se errar, perde todos os pontos acumulados da sequência.</p>
+        <p>Se sair uma carta <strong>igual</strong> à anterior, o resultado conta como <strong>acerto</strong> independentemente da sua escolha.</p>
+        <p>O jogo termina quando o baralho acaba. Vence quem tiver a maior pontuação.</p>
+        <div class="actions-bottom" style="margin-top:20px">
+          <button class="btn-primary" id="playBtn">JOGAR</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="top-tools"><button id="historyBtn" class="zoom-btn" aria-label="Ver cartas sorteadas">🔍</button></div>
+      <div class="title-score">PONTOS</div>
+      <div class="big-score" id="totalScore">00</div>
+      <div class="timer-wrap">
+        <div class="timer-bar" aria-label="Tempo da jogada">
+          <div id="timerFill" class="timer-fill"></div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-outer">
+          <div id="tableInner" class="table-inner">
+            <div id="multiplier" class="multiplier">+1</div>
+            <div class="cards-area"><div id="openCards" class="stacked-cards"></div></div>
+
+            <div class="deck-area">
+              <div id="deckShadow1" class="deck-shadow1"></div>
+              <div id="deckShadow2" class="deck-shadow2"></div>
+              <div id="deckCard" class="deck-card">
+              </div>
+              <div id="deckCount" class="deck-count">52</div>
+            </div>
+
+            <button id="lowerBtn" class="action-btn action-left" aria-label="Menor"><span>‹</span></button>
+            <button id="higherBtn" class="action-btn action-right" aria-label="Maior"><span>›</span></button>
+            <button id="stopBtn" class="action-btn action-stop" aria-label="Parar"><span>✋</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div id="streakChip" class="chip">Sequência: <strong id="streakLabel">0</strong></div>
+        <div id="bankChip" class="chip">Acumulado: <strong id="bankLabel">0</strong></div>
+      </div>
+      <div id="message" class="message"></div>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <div class="result-card">
+        <div class="accent-line"></div>
+        <h1>PLACAR FINAL</h1>
+        <div id="finalPoints" class="winner"></div>
+        <div id="scoreboard" class="scoreboard"></div>
+        <div id="winnerText" class="winner"></div>
+        <div class="actions-bottom">
+          <button class="btn-secondary" id="restartBtn">JOGAR NOVAMENTE</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="historyModal" class="history-modal" aria-hidden="true">
+      <div class="history-card">
+        <div class="history-head">
+          <div class="history-title">Cartas sorteadas</div>
+          <button id="closeHistoryBtn" class="history-close" aria-label="Fechar">×</button>
+        </div>
+        <div id="historyGrid" class="history-grid"></div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>

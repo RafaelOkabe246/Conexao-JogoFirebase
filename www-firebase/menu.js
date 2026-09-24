@@ -15,6 +15,8 @@ const lobbyContainer = document.getElementById("lobbyContainer");
 //===================================
 const minigamesOptionsContainer = document.getElementById("minigames-options-container");
 
+//Minigames buttons
+const maiorOuMenorBtn = document.getElementById("maiorOuMenorBtn");
 const bingoJoyBtn = document.getElementById("bingoJoyBtn");
 
 function setDisplay(element, value) {
@@ -89,7 +91,14 @@ if(startGameBtn) {
     });
 }
 
+
+//Minigames options
 if(bingoJoyBtn){
+    lobby.setLobbyMinigame("Bingo Joy");
+}
+
+if(maiorOuMenorBtn){
+    lobby.setLobbyMinigame("Maior ou Menor");
 }
 
 export function showStartGameButton() {

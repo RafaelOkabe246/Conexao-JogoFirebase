@@ -28,12 +28,6 @@ export async function createLobby() {
     
     const roomRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
     
-
-
-    //const playersRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}/players`);
-        // Keep generating until we find an unused code
-
-    
     // Check if room already exists (very unlikely, but just in case)
     
 
@@ -72,6 +66,13 @@ export async function createLobby() {
     return lobbyId;
 
 }
+
+function setLobbyMinigame(minigame) {
+    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${currentLobbyId}`);
+    realtimeDB.update(lobbyRef, { miniGame: minigame });
+}
+
+
 
 export async function joinLobby(userId, lobbyId) {
     const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
@@ -128,17 +129,28 @@ export async function joinLobby(userId, lobbyId) {
             console.log('Game started! Redirecting to game page...');
             currentLobbyId = lobbyId;
             setCurrentLobbyId(lobbyId);
-            window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
+
+            //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
+            window.location.href = returnMinigamePage();
         }
-
-        
-
     });
 
 
     return true;
 }
 
+function returnMinigamePage() {
+    
+    switch (minigame) {
+        case "Bingo Joy":
+            return `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${currentLobbyId}`;
+        case "Maior ou Menor":
+            return `./Minigames/MaiorOuMenor/duelo-mais-ou-menos.html?lobbyId=${currentLobbyId}`;
+        default:
+            console.error(`Unknown minigame: ${minigame}`);
+            return null;
+    }
+}
 
 export async function getIsHost(){
     const lobbyId = getCurrentLobbyId();
