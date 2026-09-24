@@ -94,11 +94,15 @@ if(startGameBtn) {
 
 //Minigames options
 if(bingoJoyBtn){
-    lobby.setLobbyMinigame("Bingo Joy");
+    bingoJoyBtn.addEventListener("click", async () => {
+        await lobby.setLobbyMinigame("Bingo Joy");
+    });
 }
 
 if(maiorOuMenorBtn){
-    lobby.setLobbyMinigame("Maior ou Menor");
+    maiorOuMenorBtn.addEventListener("click", async () => {
+        await lobby.setLobbyMinigame("Maior ou Menor");
+    });
 }
 
 export function showStartGameButton() {

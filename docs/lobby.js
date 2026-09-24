@@ -67,9 +67,16 @@ export async function createLobby() {
 
 }
 
-async function setLobbyMinigame(minigame) {
-    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${currentLobbyId}`);
+export async function setLobbyMinigame(minigame) {
+    const lobbyId = getCurrentLobbyId();
+    if (!lobbyId) {
+        console.error('Cannot select a minigame without joining a lobby.');
+        return false;
+    }
+
+    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
     await realtimeDB.update(lobbyRef, { miniGame: minigame });
+    return true;
 }
 
 
