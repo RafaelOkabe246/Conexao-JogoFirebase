@@ -148,7 +148,7 @@ export async function joinLobby(userId, lobbyId) {
 }
 
 function returnMinigamePage(minigame) {
-    
+    console.log("Current minigame: " + minigame);
     switch (minigame) {
         case "Bingo Joy":
             return `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${currentLobbyId}`;
