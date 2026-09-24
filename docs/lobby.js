@@ -67,9 +67,9 @@ export async function createLobby() {
 
 }
 
-function setLobbyMinigame(minigame) {
+async function setLobbyMinigame(minigame) {
     const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${currentLobbyId}`);
-    realtimeDB.update(lobbyRef, { miniGame: minigame });
+    await realtimeDB.update(lobbyRef, { miniGame: minigame });
 }
 
 
