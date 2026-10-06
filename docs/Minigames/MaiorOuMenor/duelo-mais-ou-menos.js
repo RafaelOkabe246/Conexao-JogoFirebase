@@ -422,6 +422,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   function setMessage(text){ elements.message.textContent = text; }
 
   function startGame(){
+    console.log('Starting game...');
     ensureAudio();
     startBGM();
     stopTurnTimer();
