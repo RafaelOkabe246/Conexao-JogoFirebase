@@ -363,6 +363,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   function setInitialScreen(){
     console.log('Setting initial screen...');
     const isHost = getIsHost();
+    console.log(`Is host: ${isHost}`);
     if(isHost){
       showScreen(elements.startGame);
     }
