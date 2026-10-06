@@ -79,7 +79,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   setInitialScreen();
   //#endregion
 
-  handleLobbyUpdate();
+  await handleLobbyUpdate();
   //#region Game events listeners
   async function handleLobbyUpdate(){
     console.log('Lobby update received:');
