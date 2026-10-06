@@ -84,12 +84,11 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   async function handleLobbyUpdate(){
     console.log('Lobby update received:');
     
-    if(gameDataRef && !(await getIsHost())){
-      console.log('Host detected, sending game data updates...');
-      // Host logic to update game data in the database
-      realtimeDB.onValue(gameDataRef, (snapshot) => {
-          const response = snapshot.val().toString();
-        console.log('Game data updated:', response);
+    if(gameStatusRef && !(await getIsHost())){
+      console.log('Client listening for game status updates...');
+      realtimeDB.onValue(gameStatusRef, (snapshot) => {
+        const response = snapshot.val();
+        console.log('Game status updated:', response);
         if (response === 'starting'){
           startGame();
         }
