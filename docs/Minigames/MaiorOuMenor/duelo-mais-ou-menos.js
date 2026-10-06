@@ -360,11 +360,12 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
 
   //#region Host and client communication (for multiplayer)
 
-  function setInitialScreen(){
+  async function setInitialScreen(){
     console.log('Setting initial screen...');
-    const isHost = getIsHost();
+    const isHost = await getIsHost();
     console.log(`Is host: ${isHost}`);
     if(isHost){
+      console.log('Host detected, showing start screen...');
       showScreen(elements.startGame);
     }
     else{
