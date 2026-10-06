@@ -29,6 +29,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
     startGame: document.getElementById('startGameScreen'),
     game: document.getElementById('gameScreen'),
     result: document.getElementById('resultScreen'),
+    playBtnHost: document.getElementById('playBtnHost'),
     playBtn: document.getElementById('playBtn'),
     restartBtn: document.getElementById('restartBtn'),
     totalScore: document.getElementById('totalScore'),
@@ -107,7 +108,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
    function startTheGameAsHost(){
 
     console.log('Host starting the game...');
-     //updateGameStatus('starting');
+     updateGameStatus('starting');
     
   }
   //#endregion
