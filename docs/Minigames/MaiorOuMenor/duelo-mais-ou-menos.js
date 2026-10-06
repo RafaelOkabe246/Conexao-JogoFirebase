@@ -3,7 +3,8 @@
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
-const datbase = realtimeDB.getDatabase();
+const database = realtimeDB.getDatabase();
+const lobbyId = getCurrentLobbyId();
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
 const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
 
