@@ -105,10 +105,10 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   }
 
    function startTheGameAsHost(){
+              startGame();
 
     console.log('Host starting the game...');
      updateGameStatus('starting');
-              startGame();
 
   }
   //#endregion
