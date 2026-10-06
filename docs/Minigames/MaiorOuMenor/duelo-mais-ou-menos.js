@@ -108,7 +108,8 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
 
     console.log('Host starting the game...');
      updateGameStatus('starting');
-    
+              startGame();
+
   }
   //#endregion
 
