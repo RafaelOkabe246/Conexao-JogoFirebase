@@ -637,6 +637,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   }
 
   elements.playBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
+  elements.playBtnHost.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
   elements.lowerBtn.addEventListener('click', () => drawNext('lower'));
