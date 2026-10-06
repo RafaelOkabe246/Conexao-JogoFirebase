@@ -1,8 +1,12 @@
+
+//import {bingoJoyHostManager, bingoJoyHostManager as bjManager} from './BingoJoyHostManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
+const datbase = realtimeDB.getDatabase();
+const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
+const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
 
-(() => {
   const suits = [
     { symbol: '♥', color: 'red' },
     { symbol: '♦', color: 'red' },
@@ -18,8 +22,10 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
     { key: 'K', value: 13 }
   ];
 
-  const el = {
+  const elements = {
     intro: document.getElementById('introScreen'),
+    wait: document.getElementById('waitScreen'),
+    startGame: document.getElementById('startGameScreen'),
     game: document.getElementById('gameScreen'),
     result: document.getElementById('resultScreen'),
     playBtn: document.getElementById('playBtn'),
@@ -67,6 +73,45 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
   let bgmInterval = null;
   let bgmEnabled = true;
 
+  //#region Initialization
+  setInitialScreen();
+  //#endregion
+
+  handleLobbyUpdate();
+  //#region Game events listeners
+  async function handleLobbyUpdate(){
+    console.log('Lobby update received:');
+    
+    if(gameDataRef && !getIsHost()){
+      console.log('Host detected, sending game data updates...');
+      // Host logic to update game data in the database
+      realtimeDB.onValue(gameDataRef, (snapshot) => {
+          const response = snapshot.val().toString();
+        console.log('Game data updated:', response);
+        if (response === 'starting'){
+          startGame();
+        }
+      });
+    } 
+  }
+
+  async function updateGameStatus(status){
+    if(gameStatusRef && getIsHost()){
+      console.log('Updating game status in the database...');
+      await realtimeDB.set(gameStatusRef, status);
+      console.log('Game status updated:', status);
+    }
+  }
+
+  function startTheGameAsHost(){
+    if(getIsHost()){
+      console.log('Host starting the game...');
+      updateGameStatus('starting');
+    }
+  }
+  //#endregion
+
+  //#region Audio Functions
   function ensureAudio(){
     if(!audioCtx){
       const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -157,6 +202,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
     tone({freq:520, type:'triangle', duration:0.045, gain:0.018});
   }
 
+
   function startBGM(){
     ensureAudio();
     stopBGM();
@@ -179,21 +225,22 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
       bgmInterval = null;
     }
   }
+  //#endregion
 
   function animateHit(kind){
     if(kind === 'correct'){
-      el.tableInner.classList.remove('glow-correct');
-      void el.tableInner.offsetWidth;
-      el.tableInner.classList.add('glow-correct');
+      elements.tableInner.classList.remove('glow-correct');
+      void elements.tableInner.offsetWidth;
+      elements.tableInner.classList.add('glow-correct');
     }else if(kind === 'wrong'){
-      el.tableInner.classList.remove('glow-wrong');
-      void el.tableInner.offsetWidth;
-      el.tableInner.classList.add('glow-wrong');
+      elements.tableInner.classList.remove('glow-wrong');
+      void elements.tableInner.offsetWidth;
+      elements.tableInner.classList.add('glow-wrong');
     }
   }
 
   function animateDeck(){
-    [el.deckCard, el.deckShadow1, el.deckShadow2].forEach(node => {
+    [elements.deckCard, elements.deckShadow1, elements.deckShadow2].forEach(node => {
       if(!node) return;
       node.classList.remove('deck-bounce');
       void node.offsetWidth;
@@ -208,21 +255,21 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
   }
 
   function animateMultiplier(){
-    el.multiplier.classList.remove('pop');
-    void el.multiplier.offsetWidth;
-    el.multiplier.classList.add('pop');
+    elements.multiplier.classList.remove('pop');
+    void elements.multiplier.offsetWidth;
+    elements.multiplier.classList.add('pop');
   }
 
   function animateScore(){
-    el.totalScore.classList.remove('score-pop');
-    void el.totalScore.offsetWidth;
-    el.totalScore.classList.add('score-pop');
+    elements.totalScore.classList.remove('score-pop');
+    void elements.totalScore.offsetWidth;
+    elements.totalScore.classList.add('score-pop');
   }
 
   function animateBank(){
-    el.bankChip.classList.remove('bank-pop');
-    void el.bankChip.offsetWidth;
-    el.bankChip.classList.add('bank-pop');
+    elements.bankChip.classList.remove('bank-pop');
+    void elements.bankChip.offsetWidth;
+    elements.bankChip.classList.add('bank-pop');
   }
 
   function stopTurnTimer(){
@@ -234,8 +281,8 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
   function renderTurnTimer(progress = 1){
     const clamped = Math.max(0, Math.min(1, progress));
-    el.timerFill.style.width = `${clamped * 100}%`;
-    el.timerFill.classList.toggle('warning', clamped <= 0.35);
+    elements.timerFill.style.width = `${clamped * 100}%`;
+    elements.timerFill.classList.toggle('warning', clamped <= 0.35);
   }
 
   function startTurnTimer(){
@@ -276,7 +323,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
   }
 
   function showScreen(screen){
-    [el.intro, el.game, el.result].forEach(s => s.classList.remove('active'));
+    [elements.intro, elements.wait, elements.startGame, elements.game, elements.result].forEach(s => s.classList.remove('active'));
     screen.classList.add('active');
   }
 
@@ -294,9 +341,9 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
   function renderOpenCards(lastOutcome = null){
     const recent = openPile.slice(-4);
-    el.openCards.innerHTML = recent.map((card, idx) => cardHTML(card, idx, recent.length)).join('');
-    if(lastOutcome && el.openCards.lastElementChild){
-      el.openCards.lastElementChild.classList.add(lastOutcome === 'correct' ? 'correct-bump' : 'wrong-shake');
+    elements.openCards.innerHTML = recent.map((card, idx) => cardHTML(card, idx, recent.length)).join('');
+    if(lastOutcome && elements.openCards.lastElementChild){
+      elements.openCards.lastElementChild.classList.add(lastOutcome === 'correct' ? 'correct-bump' : 'wrong-shake');
     }
     if (historyOpen) renderHistory();
   }
@@ -310,48 +357,66 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
       </div>`;
   }
 
+  //#region Host and client communication (for multiplayer)
+
+  function setInitialScreen(){
+    console.log('Setting initial screen...');
+    const isHost = getIsHost();
+    if(isHost){
+      showScreen(elements.startGame);
+    }
+    else{
+      console.log('Client detected, showing wait screen...');
+      showScreen(elements.wait);
+    }
+  }
+
+
+
+  //#endregion
+
   function renderHistory(){
     if (!fullHistory.length){
-      el.historyGrid.innerHTML = '<div class="history-empty" style="grid-column:1 / -1">Nenhuma carta sorteada ainda.</div>';
+      elements.historyGrid.innerHTML = '<div class="history-empty" style="grid-column:1 / -1">Nenhuma carta sorteada ainda.</div>';
       return;
     }
-    el.historyGrid.innerHTML = fullHistory.map(miniCardHTML).join('');
+    elements.historyGrid.innerHTML = fullHistory.map(miniCardHTML).join('');
   }
 
   function openHistory(){
     historyOpen = true;
     renderHistory();
-    el.historyModal.classList.add('show');
-    el.historyModal.setAttribute('aria-hidden', 'false');
+    elements.historyModal.classList.add('show');
+    elements.historyModal.setAttribute('aria-hidden', 'false');
   }
 
   function closeHistory(){
     historyOpen = false;
-    el.historyModal.classList.remove('show');
-    el.historyModal.setAttribute('aria-hidden', 'true');
+    elements.historyModal.classList.remove('show');
+    elements.historyModal.setAttribute('aria-hidden', 'true');
   }
 
   function updateUI(){
-    el.totalScore.textContent = format2(totalScore);
-    el.deckCount.textContent = deck.length;
-    el.streakLabel.textContent = streak;
-    el.bankLabel.textContent = bank;
+    elements.totalScore.textContent = format2(totalScore);
+    elements.deckCount.textContent = deck.length;
+    elements.streakLabel.textContent = streak;
+    elements.bankLabel.textContent = bank;
 
     const scoringNow = bank > 0;
-    el.stopBtn.classList.toggle('show', bank > 0);
-    el.multiplier.classList.toggle('show', scoringNow);
+    elements.stopBtn.classList.toggle('show', bank > 0);
+    elements.multiplier.classList.toggle('show', scoringNow);
     if(scoringNow){
-      el.multiplier.textContent = `+${bank}`;
+      elements.multiplier.textContent = `+${bank}`;
     }
 
     const disabled = locked || historyOpen || deck.length === 0;
-    el.higherBtn.disabled = disabled;
-    el.lowerBtn.disabled = disabled;
-    el.higherBtn.style.opacity = disabled ? .5 : 1;
-    el.lowerBtn.style.opacity = disabled ? .5 : 1;
+    elements.higherBtn.disabled = disabled;
+    elements.lowerBtn.disabled = disabled;
+    elements.higherBtn.style.opacity = disabled ? .5 : 1;
+    elements.lowerBtn.style.opacity = disabled ? .5 : 1;
   }
 
-  function setMessage(text){ el.message.textContent = text; }
+  function setMessage(text){ elements.message.textContent = text; }
 
   function startGame(){
     ensureAudio();
@@ -368,14 +433,14 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
     renderOpenCards();
     updateUI();
     setMessage('Escolha se a próxima carta será maior ou menor.');
-    showScreen(el.game);
+    showScreen(elements.game);
     startTurnTimer();
   }
 
   function endGame(){
     stopTurnTimer();
     stopBGM();
-    showScreen(el.result);
+    showScreen(elements.result);
     renderResults();
   }
 
@@ -398,8 +463,8 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
   function renderResults(){
     const players = generateOpponents(totalScore);
-    el.finalPoints.innerHTML = `Sua pontuação final: <strong>${totalScore}</strong>`;
-    el.scoreboard.innerHTML = players.map((p, idx) => `
+    elements.finalPoints.innerHTML = `Sua pontuação final: <strong>${totalScore}</strong>`;
+    elements.scoreboard.innerHTML = players.map((p, idx) => `
       <div class="player-row ${p.you ? 'you' : ''}">
         <div class="player-rank">${idx+1}º</div>
         <div class="player-name">${p.name}</div>
@@ -407,7 +472,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
       </div>
     `).join('');
     const winner = players[0];
-    el.winnerText.textContent = winner.you ? 'Parabéns! Você venceu a partida.' : `${winner.name} venceu a partida.`;
+    elements.winnerText.textContent = winner.you ? 'Parabéns! Você venceu a partida.' : `${winner.name} venceu a partida.`;
   }
 
   function handleTimeout(){
@@ -449,7 +514,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
     if (locked || deck.length === 0) return;
     ensureAudio();
     locked = true;
-    animateButton(guess === 'higher' ? el.higherBtn : el.lowerBtn);
+    animateButton(guess === 'higher' ? elements.higherBtn : elements.lowerBtn);
     animateDeck();
     stopTurnTimer();
 
@@ -527,7 +592,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
     if (bank <= 0 || locked) return;
     ensureAudio();
     locked = true;
-    animateButton(el.stopBtn);
+    animateButton(elements.stopBtn);
     stopTurnTimer();
     totalScore += bank;
     playBankSound(bank);
@@ -556,36 +621,36 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
   function showEndgameBonus(points){
     if(!points || points <= 0) return;
-    el.endgameBonusText.textContent = `BÔNUS FINAL +${points}`;
-    el.endgameBonus.classList.remove('show');
-    void el.endgameBonus.offsetWidth;
-    el.endgameBonus.classList.add('show');
+    elements.endgameBonusText.textContent = `BÔNUS FINAL +${points}`;
+    elements.endgameBonus.classList.remove('show');
+    void elements.endgameBonus.offsetWidth;
+    elements.endgameBonus.classList.add('show');
     playBankSound(points);
     setTimeout(() => {
-      el.endgameBonus.classList.remove('show');
+      elements.endgameBonus.classList.remove('show');
     }, 950);
   }
 
-  el.playBtn.addEventListener('click', () => { playClickSound(); startGame(); });
-  el.restartBtn.addEventListener('click', () => { playClickSound(); startGame(); });
-  el.higherBtn.addEventListener('click', () => drawNext('higher'));
-  el.lowerBtn.addEventListener('click', () => drawNext('lower'));
-  el.stopBtn.addEventListener('click', stopAndBank);
-  el.historyBtn.addEventListener('click', () => {
+  elements.playBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
+  elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
+  elements.higherBtn.addEventListener('click', () => drawNext('higher'));
+  elements.lowerBtn.addEventListener('click', () => drawNext('lower'));
+  elements.stopBtn.addEventListener('click', stopAndBank);
+  elements.historyBtn.addEventListener('click', () => {
     ensureAudio();
     playClickSound();
     if (historyOpen) return;
     openHistory();
     updateUI();
   });
-  el.closeHistoryBtn.addEventListener('click', () => {
+  elements.closeHistoryBtn.addEventListener('click', () => {
     ensureAudio();
     playClickSound();
     closeHistory();
     updateUI();
   });
-  el.historyModal.addEventListener('click', (e) => {
-    if (e.target === el.historyModal) {
+  elements.historyModal.addEventListener('click', (e) => {
+    if (e.target === elements.historyModal) {
       closeHistory();
       updateUI();
     }
@@ -594,8 +659,9 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
   document.addEventListener('visibilitychange', () => {
     if(document.hidden){
       stopBGM();
-    }else if(el.game.classList.contains('active')){
+    }else if(elements.game.classList.contains('active')){
       startBGM();
     }
   });
-})();
+
+

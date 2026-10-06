@@ -4,22 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Maior ou Menor</title>
-  <link rel="stylesheet" href="duelo-mais-ou-menos.css" />
-  <script src="duelo-mais-ou-menos.js" defer></script>
 
+  <script type="module" src="duelo-mais-ou-menosClient.js"></script>
+  <script type="module" src="duelo-mais-ou-menosHostManager.js"></script>
+
+  <link rel="stylesheet" href="duelo-mais-ou-menos.css" />
 </head>
 <body>
   <div class="app">
     <section id="introScreen" class="screen active">
       <div class="intro-card">
         <div class="accent-line"></div>
-        <h1>MAIOR OU MENOR</h1>
-        <p>Vire cartas e adivinhe se a próxima será <strong>maior</strong> ou <strong>menor</strong> que a carta aberta.</p>
-        <p>Você tem <strong>15 segundos por jogada</strong>. Se o tempo acabar, a sequência atual é descartada.</p>
-        <p>A cada <strong>3 acertos seguidos</strong>, você começa a marcar pontos. A partir daí, cada novo acerto na mesma sequência vale <strong>+1 ponto extra</strong>.</p>
-        <p>Quando a sequência estiver pontuando, use o botão <strong>parar</strong> para guardar os pontos. Se errar, perde todos os pontos acumulados da sequência.</p>
-        <p>Se sair uma carta <strong>igual</strong> à anterior, o resultado conta como <strong>acerto</strong> independentemente da sua escolha.</p>
-        <p>O jogo termina quando o baralho acaba. Vence quem tiver a maior pontuação.</p>
+          <h1>MAIOR OU MENOR</h1>
+            <p>Vire cartas e adivinhe se a próxima será <strong>maior</strong> ou <strong>menor</strong> que a carta aberta.</p>
+            <p>Você tem <strong>15 segundos por jogada</strong>. Se o tempo acabar, a sequência atual é descartada.</p>
+            <p>A cada <strong>3 acertos seguidos</strong>, você começa a marcar pontos. A partir daí, cada novo acerto na mesma sequência vale <strong>+1 ponto extra</strong>.</p>
+            <p>Quando a sequência estiver pontuando, use o botão <strong>parar</strong> para guardar os pontos. Se errar, perde todos os pontos acumulados da sequência.</p>
+            <p>Se sair uma carta <strong>igual</strong> à anterior, o resultado conta como <strong>acerto</strong> independentemente da sua escolha.</p>
+            <p>O jogo termina quando o baralho acaba. Vence quem tiver a maior pontuação.</p>
+        <div class="actions-bottom" style="margin-top:20px">
+          <button class="btn-primary" id="playBtn">JOGAR</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="waitScreen" class="screen">
+      <div class="wait-card">
+        <div class=""></div>
+        <h1>AGUARDE</h1>
+        <p>Esperando o jogo começar...</p>
+      </div>
+    </section>
+
+    <section id="startGameScreen" class="screen">
+      <div class="wait-card">
+        <div class=""></div>
+        <h1>Você é host</h1>
+        <p>Começar o jogo:</p>
         <div class="actions-bottom" style="margin-top:20px">
           <button class="btn-primary" id="playBtn">JOGAR</button>
         </div>
@@ -88,6 +109,6 @@
     </div>
   </div>
 
-
+<script src="duelo-mais-ou-menos.js"></script>
 </body>
 </html>
