@@ -470,14 +470,14 @@ const isHost = await getIsHost();
 
     //Update player status in the database
     playerManager.updatePlayerStatus(true);
-
+    
+    renderResults();
     if(isHost){
       showScreen(elements.result);
     }else{
       showScreen(elements.resultClient);
 
     }
-    renderResults();
   }
 
   function generateOpponents(userScore){
