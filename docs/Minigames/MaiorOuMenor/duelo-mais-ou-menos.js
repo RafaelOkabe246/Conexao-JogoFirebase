@@ -92,7 +92,7 @@ let hasGameEnded = false;
     if(gameStatusRef && !(await getIsHost())){
       console.log('Client listening for game status updates...');
       realtimeDB.onValue(gameStatusRef, (snapshot) => {
-        const response = snapshot.val().toString();
+        const response = snapshot.val();
         console.log('Game status updated:', response);
         if (response === 'starting'){
           startGame();
