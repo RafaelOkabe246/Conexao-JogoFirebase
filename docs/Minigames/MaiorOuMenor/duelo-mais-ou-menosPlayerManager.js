@@ -66,14 +66,7 @@ class MaisOuMenorPlayerManager {
         return this.playersRef;
     }
 
-    async chooseDifficulty(difficulty){
-         if(!this.IsHost) return;
-        await this.gameDataRef.update({
-            difficulty: difficulty
-        });
-    }
-
-
+   
     async resetGameForAllPlayers() {
         if(!this.IsHost) return;
         await this.ensureRefs();
