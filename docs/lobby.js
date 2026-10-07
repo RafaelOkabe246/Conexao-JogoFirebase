@@ -33,12 +33,9 @@ export async function createLobby() {
 
     const lobbyData = {
         host: userId,
-        players: {
-            [userId]: {
-                ready: false,
-                playerEndedGame: false,
-                test: "test" // Placeholder for additional player data
-            }
+        [`players/${userId}`]: {
+            ready: false,
+            playerEndedGame: false
         },
         status: "waiting",
         miniGame: "default",
