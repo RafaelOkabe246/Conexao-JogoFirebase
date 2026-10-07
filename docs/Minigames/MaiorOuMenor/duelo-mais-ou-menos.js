@@ -6,7 +6,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 const database = realtimeDB.getDatabase();
 const lobbyId = getCurrentLobbyId();
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
-const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
+const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/status`);
 const playersRef = realtimeDB.ref(database, `lobbies/${lobbyId}/players`);
 const isHost = await getIsHost();
 
