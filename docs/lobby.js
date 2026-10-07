@@ -102,7 +102,8 @@ export async function joinLobby(userId, lobbyId) {
 
     // Add player to the room
     await realtimeDB.update(lobbyRef, {
-        [`players/${userId}`]: true
+        [`players/${userId}/ready`]: false,
+        [`players/${userId}/playerEndedGame`]: false
     });
 
     //Verify is is host
