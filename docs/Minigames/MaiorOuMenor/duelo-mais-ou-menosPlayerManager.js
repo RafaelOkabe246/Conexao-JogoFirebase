@@ -7,8 +7,6 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 class MaisOuMenorPlayerManager {
     constructor(userId) {
         this.userId = userId;
-        console.log("Player Manager initialized with userId:", this.userId);
-        this.initializePlayerData();
     }
 
     async initializePlayerData(){

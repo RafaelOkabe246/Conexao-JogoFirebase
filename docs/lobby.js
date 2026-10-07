@@ -35,7 +35,8 @@ export async function createLobby() {
         host: userId,
         players: {
             [userId]: {
-                ready: false
+                ready: false,
+                playerEndedGame: false
             }
         },
         status: "waiting",

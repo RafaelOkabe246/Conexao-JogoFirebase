@@ -296,6 +296,7 @@ let hasGameEnded = false;
 
   //#endregion
 
+  //#region Game Logic
   function stopTurnTimer(){
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -345,6 +346,8 @@ let hasGameEnded = false;
     }
     return a;
   }
+
+  //#endregion
 
   function showScreen(screen){
     [elements.intro, elements.wait, elements.startGame, elements.game, elements.result, elements.resultClient].forEach(s => s.classList.remove('active'));
