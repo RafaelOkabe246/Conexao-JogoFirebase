@@ -1,5 +1,5 @@
 
-//import {bingoJoyHostManager, bingoJoyHostManager as bjManager} from './BingoJoyHostManager.js';
+import {maisOuMenorPlayerManager as playerManager} from './duelo-mais-ou-menosPlayerManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
@@ -7,6 +7,7 @@ const database = realtimeDB.getDatabase();
 const lobbyId = getCurrentLobbyId();
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
 const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
+const isHost = await getIsHost();
 
   const suits = [
     { symbol: '♥', color: 'red' },
@@ -29,6 +30,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
     startGame: document.getElementById('startGameScreen'),
     game: document.getElementById('gameScreen'),
     result: document.getElementById('resultScreen'),
+    resultClient: document.getElementById('resultScreenClient'),
     playBtnHost: document.getElementById('playBtnHost'),
     playBtn: document.getElementById('playBtn'),
     restartBtn: document.getElementById('restartBtn'),
@@ -94,10 +96,22 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
         }
       });
     } 
+
+  if(gameDataRef && (await getIsHost())){
+      console.log('Host listening for game status updates...');
+      realtimeDB.onValue(gameStatusRef, (snapshot) => {
+        const response = snapshot.val().toString();
+        console.log('Game status updated:', response);
+        if (response === 'starting'){
+          startGame();
+        }
+      });
+  }
+
   }
 
   async function updateGameStatus(status){
-    if(gameStatusRef && await getIsHost()){
+    if(gameStatusRef && isHost){
       console.log('Updating game status in the database...');
       await realtimeDB.set(gameStatusRef, status);
       console.log('Game status updated:', status);
@@ -105,7 +119,12 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   }
 
    function startTheGameAsHost(){
-              startGame();
+    
+    if(!playerManager.allPlayersEndedGame()){
+      return;
+    }
+    
+    startGame();
 
     console.log('Host starting the game...');
      updateGameStatus('starting');
@@ -229,6 +248,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   }
   //#endregion
 
+  //#region UI Animations
   function animateHit(kind){
     if(kind === 'correct'){
       elements.tableInner.classList.remove('glow-correct');
@@ -273,6 +293,8 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
     void elements.bankChip.offsetWidth;
     elements.bankChip.classList.add('bank-pop');
   }
+
+  //#endregion
 
   function stopTurnTimer(){
     if (timerInterval) {
@@ -325,7 +347,7 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   }
 
   function showScreen(screen){
-    [elements.intro, elements.wait, elements.startGame, elements.game, elements.result].forEach(s => s.classList.remove('active'));
+    [elements.intro, elements.wait, elements.startGame, elements.game, elements.result, elements.resultClient].forEach(s => s.classList.remove('active'));
     screen.classList.add('active');
   }
 
@@ -445,7 +467,16 @@ const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
   function endGame(){
     stopTurnTimer();
     stopBGM();
-    showScreen(elements.result);
+
+    //Update player status in the database
+    playerManager.updatePlayerStatus(true);
+
+    if(isHost){
+      showScreen(elements.result);
+    }else{
+      showScreen(elements.resultClient);
+
+    }
     renderResults();
   }
 
