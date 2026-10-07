@@ -7,7 +7,10 @@ const database = realtimeDB.getDatabase();
 const lobbyId = getCurrentLobbyId();
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
 const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameStatus`);
+const playersRef = realtimeDB.ref(database, `lobbies/${lobbyId}/players`);
 const isHost = await getIsHost();
+
+let hasGameEnded = false;
 
   const suits = [
     { symbol: '♥', color: 'red' },
@@ -97,15 +100,12 @@ const isHost = await getIsHost();
       });
     } 
 
-  if(gameDataRef && (await getIsHost())){
+  if((await getIsHost())){
       console.log('Host listening for game status updates...');
-      realtimeDB.onValue(gameStatusRef, (snapshot) => {
-        const response = snapshot.val().toString();
-        console.log('Game status updated:', response);
-        if (response === 'starting'){
-          startGame();
-        }
-      });
+      if(playerManager.allPlayersEndedGame){
+        console.log('All players have ended the game. Can start the game...');
+        hasGameEnded = true;
+      }
   }
 
   }
@@ -120,7 +120,7 @@ const isHost = await getIsHost();
 
    function startTheGameAsHost(){
     
-    if(!playerManager.allPlayersEndedGame()){
+    if(!hasGameEnded){
       return;
     }
     
@@ -409,6 +409,7 @@ const isHost = await getIsHost();
     elements.historyGrid.innerHTML = fullHistory.map(miniCardHTML).join('');
   }
 
+  //#region History Modal
   function openHistory(){
     historyOpen = true;
     renderHistory();
@@ -421,6 +422,7 @@ const isHost = await getIsHost();
     elements.historyModal.classList.remove('show');
     elements.historyModal.setAttribute('aria-hidden', 'true');
   }
+//#endregion
 
   function updateUI(){
     elements.totalScore.textContent = format2(totalScore);
