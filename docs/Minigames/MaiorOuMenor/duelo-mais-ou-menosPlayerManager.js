@@ -97,7 +97,7 @@ class MaisOuMenorPlayerManager {
         const snapshot = await realtimeDB.get(this.playersRef);
 
         if (!snapshot.exists()) return false;
-
+        console.log("Snapshot exists. Checking player statuses...");
         let allEnded = true;
         snapshot.forEach((childSnap) => {
             const player = childSnap.val() || {};
