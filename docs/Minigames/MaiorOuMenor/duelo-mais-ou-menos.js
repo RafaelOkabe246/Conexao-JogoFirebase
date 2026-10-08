@@ -106,6 +106,7 @@ let hasGameEnded = false;
       if(playerManager.allPlayersEndedGame()){
         console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
+        updateGameStatus('ended');
       }
   }
 
