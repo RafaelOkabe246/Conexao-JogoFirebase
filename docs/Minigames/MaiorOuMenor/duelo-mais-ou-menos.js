@@ -478,7 +478,7 @@ let hasGameEnded = false;
 
     //Update player status in the database
     playerManager.updatePlayerStatus(true);
-    
+    handleLobbyUpdate();
     renderResults();
     if(isHost){
       showScreen(elements.result);
