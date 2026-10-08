@@ -8,6 +8,8 @@ class MaisOuMenorPlayerManager {
     constructor(userId) {
         this.userId = userId;
         this.IsHost = false;
+
+        this.database = realtimeDB.getDatabase();
     }
 
     async initializePlayerData(){
@@ -165,7 +167,7 @@ class MaisOuMenorPlayerManager {
         const database = await realtimeDB.getDatabase();
         const lobbyId = getCurrentLobbyId();
         const lobbyPath = `lobbies/${lobbyId}`;
-
+        console.log("Checking if all players have ended the game...");
         const playersRef = await realtimeDB.ref(database, `${lobbyPath}/players`);
         const snapshot = await realtimeDB.get(playersRef);
 
