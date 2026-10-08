@@ -163,7 +163,8 @@ class MaisOuMenorPlayerManager {
 
     async allPlayersEndedGame() {
         const database = await realtimeDB.getDatabase();
-        const lobbyPath = `lobbies/${this.lobbyId}`;
+        const lobbyId = getCurrentLobbyId();
+        const lobbyPath = `lobbies/${lobbyId}`;
 
         const playersRef = await realtimeDB.ref(database, `${lobbyPath}/players`);
         const snapshot = await realtimeDB.get(playersRef);
