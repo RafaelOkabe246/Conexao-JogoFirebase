@@ -7,6 +7,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 class MaisOuMenorPlayerManager {
     constructor(userId) {
         this.userId = userId;
+        this.IsHost = false;
     }
 
     async initializePlayerData(){
@@ -161,7 +162,9 @@ class MaisOuMenorPlayerManager {
 
 
     async allPlayersEndedGame() {
-        const snapshot = await realtimeDB.get(this.playersRef);
+        this.database = await realtimeDB.getDatabase();
+        const playersRef = await realtimeDB.ref(this.database, `${lobbyPath}/players`);
+        const snapshot = await realtimeDB.get(playersRef);
 
         if (!snapshot.exists()) return false;
 
