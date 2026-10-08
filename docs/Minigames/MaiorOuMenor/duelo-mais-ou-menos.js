@@ -124,7 +124,7 @@ let hasGameEnded = false;
    function startTheGameAsHost(){
     
     if(!hasGameEnded){
-      return;
+   //   return;
     }
     
     startGame();
