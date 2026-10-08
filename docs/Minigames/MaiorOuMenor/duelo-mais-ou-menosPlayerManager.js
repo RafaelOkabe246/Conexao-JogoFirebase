@@ -92,12 +92,12 @@ class MaisOuMenorPlayerManager {
 
 
     async allPlayersEndedGame() {
-        await this.ensureRefs();
-        console.log("Checking if all players have ended the game...");
-        const snapshot = await realtimeDB.get(this.playersRef);
+        //await this.ensureRefs();
+        //console.log("Checking if all players have ended the game...");
+        //const snapshot = await realtimeDB.get(this.playersRef);
 
-        if (!snapshot.exists()) return false;
-        console.log("Snapshot exists. Checking player statuses...");
+        //if (!snapshot.exists()) return false;
+        //console.log("Snapshot exists. Checking player statuses...");
         let allEnded = true;
         snapshot.forEach((childSnap) => {
             const player = childSnap.val() || {};
