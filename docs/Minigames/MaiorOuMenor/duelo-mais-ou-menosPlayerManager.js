@@ -43,69 +43,7 @@ class MaisOuMenorPlayerManager {
     }
 
 
-    GetGameStateRef(){
-        return this.gameStateRef;
-    }
 
-    GetIsHost(){
-        return this.IsHost;
-    }
-
-    GetPlayerRef(){
-        return this.playerRef;
-    }
-
-    GetPlayersRef(){
-        return this.playersRef;
-    }
-
-   
-    async resetGameForAllPlayers() {
-        if(!this.IsHost) return;
-        await this.ensureRefs();
-
-        const initialGameData = {
-            currentRound: 0,
-            availableRounds: 0,
-            availableNumbers: 0,
-            difficulty: "hard",
-            winner: null,
-            currentOptions: [],
-            selectedNumber: null
-        };
-
-        await realtimeDB.set(this.gameDataRef, initialGameData);
-        await realtimeDB.update(this.gameStateRef, { GameState: 'starting' });
-
-        const snapshot = await realtimeDB.get(this.playersRef);
-        if (snapshot.exists()) {
-            const updates = {};
-            snapshot.forEach((childSnap) => {
-                const playerId = childSnap.key;
-                if (!playerId) return;
-                updates[`players/${playerId}/playerEndedGame`] = false;
-                updates[`players/${playerId}/wonGame`] = false;
-            });
-            if (Object.keys(updates).length > 0) {
-                await realtimeDB.update(this.lobbyRef, updates);
-            }
-        }
-        
-    }
-
-    async waitHostRestartGame() {
-        if(!this.IsHost) return;
-        window.location.href = '../../index.html';
-
-        await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
-            const state = snapshot.val();
-            if(state && state.GameState === 'playing') 
-                {
-                    console.log("Back to menu");
-
-            }
-        });
-    }
 
     async updatePlayerStatus(playerEndedGame) {
         await this.ensureRefs();
@@ -154,23 +92,20 @@ class MaisOuMenorPlayerManager {
 
 
     async allPlayersEndedGame() {
-        const database = await realtimeDB.getDatabase();
-        const lobbyId = getCurrentLobbyId();
-        const lobbyPath = `lobbies/${lobbyId}`;
+        await this.ensureRefs();
         console.log("Checking if all players have ended the game...");
-        const playersRef = await realtimeDB.ref(database, `${lobbyPath}/players`);
-        const snapshot = await realtimeDB.get(playersRef);
+        const snapshot = await realtimeDB.get(this.playersRef);
 
         if (!snapshot.exists()) return false;
 
         let allEnded = true;
-
         snapshot.forEach((childSnap) => {
             const player = childSnap.val() || {};
             if (player.playerEndedGame !== true) {
                 allEnded = false;
-                return false; // stop iterating
+                return true;
             }
+            return false;
         });
 
         return allEnded;
