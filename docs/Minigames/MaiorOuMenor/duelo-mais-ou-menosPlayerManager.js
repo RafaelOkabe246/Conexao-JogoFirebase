@@ -42,16 +42,6 @@ class MaisOuMenorPlayerManager {
         this.playersRef = realtimeDB.ref(this.database, `${lobbyPath}/players`);
     }
 
-    async initializeHostState() {
-        await this.ensureRefs();
-        this.IsHost = await getIsHost();
-
-        await this.initializePlayerData();
-
-        if(this.IsHost) {
-            this.SetUpGameData();
-        }
-    }
 
     GetGameStateRef(){
         return this.gameStateRef;
