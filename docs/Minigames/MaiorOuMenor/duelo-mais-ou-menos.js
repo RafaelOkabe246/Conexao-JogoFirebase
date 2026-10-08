@@ -94,7 +94,8 @@ let hasGameEnded = false;
       realtimeDB.onValue(gameStatusRef, (snapshot) => {
         const response = snapshot.val().toString();
         console.log('Game status updated:', response);
-        if (response ===  'playing'){
+        
+        if (response === 'playing'){
           startGame();
         }
       });
