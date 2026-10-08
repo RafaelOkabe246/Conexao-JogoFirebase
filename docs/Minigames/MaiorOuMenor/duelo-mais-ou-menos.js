@@ -104,11 +104,11 @@ let hasGameEnded = false;
 
   if((await getIsHost())){
       console.log('Host listening for game status updates...');
-      if(await playerManager.allPlayersEndedGame()){
-        console.log('All players have ended the game. Can start the game...');
-        hasGameEnded = true;
-        updateGameStatus('ended');
-      }
+      //if(await playerManager.allPlayersEndedGame()){
+        //console.log('All players have ended the game. Can start the game...');
+        //hasGameEnded = true;
+        //updateGameStatus('ended');
+      //}
   }
 
   }
