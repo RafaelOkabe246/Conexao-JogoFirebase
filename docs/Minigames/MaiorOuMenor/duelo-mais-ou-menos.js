@@ -94,7 +94,7 @@ let hasGameEnded = false;
       realtimeDB.onValue(gameStatusRef, (snapshot) => {
         const response = snapshot.val().toString();
         console.log('Game status updated:', response);
-        if (response === 'starting'){
+        if (response === 'playing'){
           startGame();
         }
       });
@@ -102,7 +102,7 @@ let hasGameEnded = false;
 
   if((await getIsHost())){
       console.log('Host listening for game status updates...');
-      if(playerManager.allPlayersEndedGame){
+      if(playerManager.allPlayersEndedGame()){
         console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
       }
@@ -126,8 +126,8 @@ let hasGameEnded = false;
     
     startGame();
 
-    console.log('Host starting the game...');
-     updateGameStatus('starting');
+    console.log('Host playing the game...');
+     updateGameStatus('playing');
 
   }
   //#endregion
