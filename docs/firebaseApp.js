@@ -41,7 +41,6 @@ const authenticationMethods = {
   onAuthStateChanged: (callback) => onAuthStateChanged(auth, callback),
   getUserId: () => auth.currentUser
 };
-console.log("Current User ID: ", authenticationMethods.getUserId());
 
 
 export {app, auth, database, realtimeDataBaseMethods, authenticationMethods};
