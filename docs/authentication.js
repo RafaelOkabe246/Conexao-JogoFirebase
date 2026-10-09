@@ -53,6 +53,7 @@ export async function waitForUserId() {
 
 export function getUserId() {
     const user = authenticationMethods.getUserId();
+    console.log("Current User ID: ", user?.uid);
     if (user) {
         return user.uid;
     }
