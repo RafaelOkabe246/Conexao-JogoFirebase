@@ -39,7 +39,7 @@ const realtimeDataBaseMethods = {
 const authenticationMethods = {
   signInAnonymously: () => signInAnonymously(auth),
   onAuthStateChanged: (callback) => onAuthStateChanged(auth, callback),
-  getUserId: () => auth.currentUser?.uid
+  getUserId: () => auth.currentUser
 };
 console.log("Current User ID: ", authenticationMethods.getUserId());
 
