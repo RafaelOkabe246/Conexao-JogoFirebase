@@ -481,6 +481,7 @@ let hasGameEnded = false;
     await handleLobbyUpdate();
     renderResults();
     if(isHost){
+           updateGameStatus('ended');
       showScreen(elements.result);
     }else{
       showScreen(elements.resultClient);
