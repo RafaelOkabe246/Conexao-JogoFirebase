@@ -128,6 +128,6 @@ class MaisOuMenorPlayerManager {
 
 }
 
-let maisOuMenorPlayerManager = new MaisOuMenorPlayerManager(authentication.getUserId());
+let maisOuMenorPlayerManager = new MaisOuMenorPlayerManager(await authentication.waitForUserId());
 
 export {maisOuMenorPlayerManager}
