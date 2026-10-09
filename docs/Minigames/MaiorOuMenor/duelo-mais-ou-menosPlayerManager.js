@@ -7,9 +7,14 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 class MaisOuMenorPlayerManager {
     constructor(userId) {
         this.userId = userId;
-        this.IsHost = false;
-
         this.database = realtimeDB.getDatabase();
+        this.lobbyId = null;
+        this.lobbyRef = null;
+        this.gameStateRef = null;
+        this.gameDataRef = null;
+        this.playerRef = null;
+        this.playersRef = null;
+        ensureRefs();
     }
 
     async initializePlayerData(){
@@ -28,6 +33,13 @@ class MaisOuMenorPlayerManager {
     }
 
     async ensureRefs() {
+        this.lobbyId = getCurrentLobbyId() || this.lobbyId || new URLSearchParams(window.location.search).get("lobbyId");
+        this.lobbyRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}`);
+        this.gameStateRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/GameState`);
+        this.gameDataRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/GameData`);
+        this.playerRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/players/${this.userId}`);
+        this.playersRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/players`);
+        /*
         if (!this.userId) {
             this.userId = await authentication.waitForUserId();
         }
@@ -40,22 +52,9 @@ class MaisOuMenorPlayerManager {
         this.gameDataRef = realtimeDB.ref(this.database, `${lobbyPath}/GameData`);
         this.playerRef = realtimeDB.ref(this.database, `${lobbyPath}/players/${this.userId}`);
         this.playersRef = realtimeDB.ref(this.database, `${lobbyPath}/players`);
+        */
     }
 
-
-
-
-    async updatePlayerStatus(playerEndedGame) {
-        await this.ensureRefs();
-        await realtimeDB.update(this.playerRef, {
-            playerEndedGame: playerEndedGame
-        });
-    }
-
-    async SetGameState(state) {
-        if(!this.IsHost) return;
-        await realtimeDB.update(this.gameStateRef, { GameState: state });
-    }
 
     async SetUpGameData(){
     //Set up the game data
@@ -92,6 +91,13 @@ class MaisOuMenorPlayerManager {
 
 
     async allPlayersEndedGame() {
+        const snapshot = await realtimeDB.get(this.playersRef);
+        if(!snapshot.exists()) {
+            console.log("No players found in the lobby.");
+            return false;
+        }else{
+            console.log("Players found in the lobby. Checking if all players have ended the game...");
+        }
         //await this.ensureRefs();
         //console.log("Checking if all players have ended the game...");
         //const snapshot = await realtimeDB.get(this.playersRef);

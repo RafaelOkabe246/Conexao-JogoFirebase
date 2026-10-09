@@ -10,6 +10,10 @@ const cleanupBtn = document.getElementById("cleanupBtn");
 const startGameBtn = document.getElementById("startGameBtn");
 const lobbyIdDisplay = document.getElementById("lobbyId");
 
+const leaveBtn = document.getElementById("leaveBtn");
+
+const currentMinigameDisplay = document.getElementById("currentMinigame");
+
 const lobbyContainer = document.getElementById("lobbyContainer");
 
 //===================================
@@ -96,12 +100,14 @@ if(startGameBtn) {
 if(bingoJoyBtn){
     bingoJoyBtn.addEventListener("click", async () => {
         await lobby.setLobbyMinigame("Bingo Joy");
+        currentMinigameDisplay.textContent = "Bingo Joy";
     });
 }
 
 if(maiorOuMenorBtn){
     maiorOuMenorBtn.addEventListener("click", async () => {
         await lobby.setLobbyMinigame("Maior ou Menor");
+        currentMinigameDisplay.textContent = "Maior ou Menor";
     });
 }
 
