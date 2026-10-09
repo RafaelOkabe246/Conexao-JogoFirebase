@@ -39,8 +39,9 @@ const realtimeDataBaseMethods = {
 const authenticationMethods = {
   signInAnonymously: () => signInAnonymously(auth),
   onAuthStateChanged: (callback) => onAuthStateChanged(auth, callback),
-  getUserId: () => auth.currentUser
+  getUserId: () => auth.currentUser?.uid
 };
+console.log("Current User ID: ", authenticationMethods.getUserId());
 
 
 export {app, auth, database, realtimeDataBaseMethods, authenticationMethods};

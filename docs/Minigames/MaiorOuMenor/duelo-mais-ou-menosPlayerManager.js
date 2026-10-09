@@ -6,7 +6,7 @@ import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
 class MaisOuMenorPlayerManager {
     constructor(userId) {
-        console.log("User ID: ", userId);
+        //console.log("User ID: ", userId);
         this.userId = userId;
         this.database = realtimeDB.getDatabase();
         this.lobbyId = null;
