@@ -90,6 +90,14 @@ class MaisOuMenorPlayerManager {
     }
 
 
+        async updatePlayerStatus(playerEndedGame) {
+        await this.ensureRefs();
+        await realtimeDB.update(this.playerRef, {
+            playerEndedGame: playerEndedGame
+        });
+    }
+
+
     async allPlayersEndedGame() {
         const snapshot = await realtimeDB.get(this.playersRef);
         if(!snapshot.exists()) {
