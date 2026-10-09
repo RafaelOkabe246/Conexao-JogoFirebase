@@ -90,8 +90,8 @@ class MaisOuMenorPlayerManager {
     }
 
 
-        async updatePlayerStatus(playerEndedGame) {
-        await this.ensureRefs();
+    async updatePlayerStatus(playerEndedGame) {
+        console.log(`Updating player status for userId: ${this.userId} to playerEndedGame: ${playerEndedGame}`);
         await realtimeDB.update(this.playerRef, {
             playerEndedGame: playerEndedGame
         });
