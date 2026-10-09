@@ -14,7 +14,7 @@ class MaisOuMenorPlayerManager {
         this.gameDataRef = null;
         this.playerRef = null;
         this.playersRef = null;
-        ensureRefs();
+        this.ensureRefs();
     }
 
     async initializePlayerData(){
