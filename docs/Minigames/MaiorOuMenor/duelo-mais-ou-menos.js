@@ -488,6 +488,7 @@ let hasGameEnded = false;
           deck = gameData.Deck;
           openPile = gameData.OpenPile;
           fullHistory = gameData.FullHistory;
+          console.log('Client received deck from database:', deck);
         }
       });
     }
