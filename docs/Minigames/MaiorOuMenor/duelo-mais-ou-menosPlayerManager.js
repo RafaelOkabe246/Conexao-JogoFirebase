@@ -16,6 +16,7 @@ class MaisOuMenorPlayerManager {
         this.playerRef = null;
         this.playersRef = null;
         this.ensureRefs();
+        //this.SetUpGameData();
     }
 
     async initializePlayerData(){
@@ -60,25 +61,8 @@ class MaisOuMenorPlayerManager {
     async SetUpGameData(){
     //Set up the game data
         try{
-            console.log("SET UO");
-            //Set up the current minigame
-            await realtimeDB.update(this.lobbyRef, {
-                miniGame: 'Bingo Joy',
-                GameState: "starting"
-            });
-
-            const initialGameState = {
-                GameState: 'starting'
-            };
-
             const setUpGameData = {
-                currentRound: 0,
-                availableRounds: 0,
-                availableNumbers: 0,
-                difficulty: "",
-                winner: null,
-                currentOptions: [],
-                selectedNumber: null
+
             };
 
             //Set Bingo Game data and global variables

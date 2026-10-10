@@ -49,6 +49,7 @@ let _playerRounds;
 
 const MAX_NUMBER = 99;
 
+initializeBingoUi();
 
 async function initializeBingoUi() {
     isHost = await getIsHost();
@@ -73,11 +74,13 @@ async function initializeBingoUi() {
                 startWithDifficultyClient(response);
             }
         });
+    }
+    if(gameDataRef && isHost === true)    
+    {
 
     }
 }
 
-initializeBingoUi();
 
 
 function heartSVG(){

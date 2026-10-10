@@ -452,14 +452,14 @@ let hasGameEnded = false;
 
   function setMessage(text){ elements.message.textContent = text; }
 
-  function startGame(){
+  async function startGame(){
     console.log('Starting game...');
+    await setTheDeck();
     ensureAudio();
     startBGM();
     stopTurnTimer();
-    deck = buildDeck();
-    openPile = [deck.pop()];
-    fullHistory = [...openPile];
+    
+
     totalScore = 0;
     streak = 0;
     bank = 0;
@@ -470,6 +470,27 @@ let hasGameEnded = false;
     setMessage('Escolha se a próxima carta será maior ou menor.');
     showScreen(elements.game);
     startTurnTimer();
+  }
+
+  async function setTheDeck(){
+    if(isHost){
+      deck = buildDeck();
+      openPile = [deck.pop()];
+      fullHistory = [...openPile];
+      //Send the deck to database for clients to sync
+      realtimeDB.set(gameDataRef, { Deck: deck, OpenPile: openPile, FullHistory: fullHistory });
+    }
+    else{
+      //Reviece the deck from database
+      realtimeDB.onValue(gameDataRef, (snapshot) => {
+        const gameData = snapshot.val();
+        if (gameData) {
+          deck = gameData.Deck;
+          openPile = gameData.OpenPile;
+          fullHistory = gameData.FullHistory;
+        }
+      });
+    }
   }
 
   async function endGame(){
