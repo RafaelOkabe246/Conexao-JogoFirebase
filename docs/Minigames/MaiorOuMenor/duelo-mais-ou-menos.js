@@ -478,7 +478,7 @@ let hasGameEnded = false;
       openPile = [deck.pop()];
       fullHistory = [...openPile];
       //Send the deck to database for clients to sync
-      realtimeDB.set(gameDataRef, { Deck: deck, OpenPile: openPile, FullHistory: fullHistory });
+      realtimeDB.set(gameDataRef, { Deck: deck, FullHistory: fullHistory });
     }
     else{
       //Reviece the deck from database
@@ -486,7 +486,7 @@ let hasGameEnded = false;
         const gameData = snapshot.val();
         if (gameData) {
           deck = gameData.Deck;
-          openPile = gameData.OpenPile;
+          openPile = [deck.pop()];
           fullHistory = gameData.FullHistory;
           console.log('Client received deck from database:', deck);
         }
