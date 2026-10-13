@@ -24,7 +24,9 @@ class MaisOuMenorPlayerManager {
             await this.ensureRefs();
 
             const maisOuMenorPlayerData = {
-                playerEndedGame: false
+                playerEndedGame: false,
+                points: 0
+
             }
             console.log("INITIALIZING PLAYER DATA");
             await realtimeDB.update(this.playerRef, maisOuMenorPlayerData);
