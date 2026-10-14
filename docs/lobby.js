@@ -156,6 +156,8 @@ function returnMinigamePage(minigame) {
             return `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${currentLobbyId}`;
         case "Maior ou Menor":
             return `./Minigames/MaiorOuMenor/duelo-mais-ou-menos.html?lobbyId=${currentLobbyId}`;
+        case "Sevens":
+            return `./Minigames/Sevens/Sevens.html?lobbyId=${currentLobbyId}`;
         default:
             console.error(`Unknown minigame: ${minigame}`);
             return null;

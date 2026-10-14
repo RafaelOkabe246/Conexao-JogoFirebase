@@ -22,6 +22,7 @@ const minigamesOptionsContainer = document.getElementById("minigames-options-con
 //Minigames buttons
 const maiorOuMenorBtn = document.getElementById("maiorOuMenorBtn");
 const bingoJoyBtn = document.getElementById("bingoJoyBtn");
+const sevensBtn = document.getElementById("sevensBtn");
 
 function setDisplay(element, value) {
     if (element) {
@@ -108,6 +109,13 @@ if(maiorOuMenorBtn){
     maiorOuMenorBtn.addEventListener("click", async () => {
         await lobby.setLobbyMinigame("Maior ou Menor");
         currentMinigameDisplay.textContent = "Maior ou Menor";
+    });
+}
+
+if(sevensBtn){
+    sevensBtn.addEventListener("click", async () => {
+        await lobby.setLobbyMinigame("Sevens");
+        currentMinigameDisplay.textContent = "Sevens";
     });
 }
 
