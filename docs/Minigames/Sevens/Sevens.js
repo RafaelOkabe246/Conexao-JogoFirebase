@@ -18,9 +18,11 @@ const discardButton = document.getElementById('discardButton');
 const restartButton = document.getElementById('restartButton');
 
 discardButton.addEventListener('click', () => {
+  console.log("Discard button clicked. Discarding the current card...");
   discardCard();
 });
 restartButton.addEventListener('click', () => {
+  console.log("Restart button clicked. Restarting the game...");
   restartGame();
 });
 
