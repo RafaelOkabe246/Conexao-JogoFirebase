@@ -1,5 +1,5 @@
 
-import {maisOuMenorPlayerManager as playerManager} from './duelo-mais-ou-menosPlayerManager.js';
+import {sevenPlayerManager as playerManager} from './Sevens-PlayerManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
 
