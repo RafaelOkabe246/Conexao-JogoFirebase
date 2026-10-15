@@ -12,6 +12,16 @@ const isHost = await getIsHost();
 
 let hasGameEnded = false;
 
+//Buttons
+const startButton = document.getElementById('startButton');
+if(isHost) {
+  startButton.addEventListener('click', async () => {
+        await startGameAsHost();
+  });
+}
+else{
+  startButton.style.display = 'none';
+}
 
 const suits=['♠','♥','♦','♣'];
 const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -432,6 +442,11 @@ function restartGame(){
  renderRows();
  renderDiscard();
  drawCard();
+}
+
+
+async function startGameAsHost(){
+    await updateGameStatus('playing');
 }
 
 function startGame(){
