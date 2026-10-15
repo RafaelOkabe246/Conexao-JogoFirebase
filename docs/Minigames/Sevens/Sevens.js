@@ -12,8 +12,18 @@ const isHost = await getIsHost();
 
 let hasGameEnded = false;
 
-//Buttons
+//#region Buttons
 const startButton = document.getElementById('startButton');
+const discardButton = document.getElementById('discardButton');
+const restartButton = document.getElementById('restartButton');
+
+discardButton.addEventListener('click', () => {
+  discardCard();
+});
+restartButton.addEventListener('click', () => {
+  restartGame();
+});
+
 console.log("DDetected start button:", startButton);
 if(isHost) {
   startButton.addEventListener('click', async () => {
@@ -24,6 +34,10 @@ if(isHost) {
 else{
   startButton.style.display = 'none';
 }
+
+
+
+//#endregion
 
 const suits=['♠','♥','♦','♣'];
 const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
