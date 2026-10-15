@@ -14,9 +14,11 @@ let hasGameEnded = false;
 
 //Buttons
 const startButton = document.getElementById('startButton');
+console.log("DDetected start button:", startButton);
 if(isHost) {
   startButton.addEventListener('click', async () => {
-        await startGameAsHost();
+    console.log("Start button clicked by host. Starting the game...");  
+    await startGameAsHost();
   });
 }
 else{
