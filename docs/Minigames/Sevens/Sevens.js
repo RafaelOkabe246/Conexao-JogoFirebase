@@ -449,6 +449,7 @@ function restartGame(){
 
 async function startGameAsHost(){
     await updateGameStatus('playing');
+    startGame();
 }
 
 function startGame(){
