@@ -422,7 +422,9 @@ function updateScore(){
   </button>
   </div>
   `;
-  handleRestartButtonClick();
+    msg.querySelector('#endGameRestartButton')
+  .addEventListener('click', handleRestartButtonClick);
+
     }else{
       //Show player client screen
       msg.innerHTML=`
