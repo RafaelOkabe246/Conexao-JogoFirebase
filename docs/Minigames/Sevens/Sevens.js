@@ -405,7 +405,7 @@ function updateScore(){
   Pontuação Final: ${deck.length}-${discard.length} = ${finalScore}
   </div>
   </div>
-  <button onclick="restartGame()" style="margin-top:12px;padding:14px 26px;font-size:18px;border-radius:14px;background:#00b95a;color:white;border:none;font-weight:bold;">
+  <button id="restartButton" style="margin-top:12px;padding:14px 26px;font-size:18px;border-radius:14px;background:#00b95a;color:white;border:none;font-weight:bold;">
   Jogar Novamente
   </button>
   </div>
