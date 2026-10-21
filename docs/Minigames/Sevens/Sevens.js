@@ -404,9 +404,16 @@ function updateScore(){
 
   const msg=document.getElementById('message');
   msg.style.display='flex';
+  
+  const hostPanel=document.getElementById('hostEndGamePanel');
+  const clientPanel=document.getElementById('clientEndGamePanel');
+
     if(isHost){
+        hostPanel.style.display='flex';
+
       //Show host screen
-       msg.innerHTML=`
+      /* 
+      msg.innerHTML=`
   <div class="panel">
   <h2 style="font-size:34px;margin-top:0;">${win?'Vitória!':'Fim de jogo'}</h2>
   <div style="margin-top:18px;font-size:20px;line-height:1.8;">
@@ -421,9 +428,12 @@ function updateScore(){
   </button>
   </div>
   `;
+  */
   handleRestartButtonClick();
     }else{
+      clientPanel.style.display='flex';
       //Show player client screen
+      /*
       msg.innerHTML=`
   <div class="panel">
   <h2 style="font-size:34px;margin-top:0;">${win?'Vitória!':'Fim de jogo'}</h2>
@@ -441,6 +451,7 @@ function updateScore(){
   </P>
   </div>
   `;
+  */
     }
 
 }
