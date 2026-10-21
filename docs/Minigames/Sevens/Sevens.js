@@ -21,10 +21,22 @@ discardButton.addEventListener('click', () => {
   console.log("Discard button clicked. Discarding the current card...");
   discardCard();
 });
-restartButton.addEventListener('click', () => {
-  console.log("Restart button clicked. Restarting the game...");
-  restartGame();
-});
+
+function handleRestartButtonClick() {
+
+  restartButton.addEventListener('click', () => {
+    console.log("Restart button clicked. Restarting the game...");
+    if(isHost){
+      restartGame();
+      updateGameStatus('playing');
+    }else{
+      alert("Aguarde o host reiniciar o jogo.");
+    }
+    
+    restartGame();
+  });
+}
+handleRestartButtonClick();
 
 console.log("DDetected start button:", startButton);
 if(isHost) {
@@ -410,6 +422,7 @@ function updateScore(){
   </button>
   </div>
   `;
+  handleRestartButtonClick();
     }else{
       //Show player client screen
       msg.innerHTML=`
