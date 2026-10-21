@@ -409,6 +409,7 @@ function updateScore(){
   const clientPanel=document.getElementById('clientEndGamePanel');
 
     if(isHost){
+      console.log("Host detected. Displaying host end game panel.");
         hostPanel.style.display='flex';
 
       //Show host screen
