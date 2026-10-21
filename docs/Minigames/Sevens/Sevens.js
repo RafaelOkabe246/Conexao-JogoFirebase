@@ -424,7 +424,6 @@ function updateScore(){
   `;
     msg.querySelector('#endGameRestartButton')
   .addEventListener('click', handleRestartButtonClick(msg.querySelector('#endGameRestartButton')));
-      console.log("msg.querySelector('#endGameRestartButton') event listener added.");
     }else{
       //Show player client screen
       msg.innerHTML=`
