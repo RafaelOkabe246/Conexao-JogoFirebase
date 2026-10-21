@@ -23,7 +23,7 @@ discardButton.addEventListener('click', () => {
 });
 
 function handleRestartButtonClick() {
-
+  console.log("Setting up restart button click handler...");
   restartButton.addEventListener('click', async () => {
     console.log("Restart button clicked. Restarting the game...");
     if(isHost){
