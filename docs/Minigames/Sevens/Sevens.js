@@ -22,9 +22,9 @@ discardButton.addEventListener('click', () => {
   discardCard();
 });
 
-function handleRestartButtonClick() {
+function handleRestartButtonClick(_restartButton) {
   console.log("Setting up restart button click handler...");
-  restartButton.addEventListener('click', async () => {
+  _restartButton.addEventListener('click', async () => {
     console.log("Restart button clicked. Restarting the game...");
     if(isHost){
       restartGame();
@@ -35,7 +35,7 @@ function handleRestartButtonClick() {
     
   });
 }
-handleRestartButtonClick();
+handleRestartButtonClick(restartButton);
 
 console.log("DDetected start button:", startButton);
 if(isHost) {
@@ -423,7 +423,7 @@ function updateScore(){
   </div>
   `;
     msg.querySelector('#endGameRestartButton')
-  .addEventListener('click', handleRestartButtonClick);
+  .addEventListener('click', handleRestartButtonClick(msg.querySelector('#endGameRestartButton')));
       console.log("msg.querySelector('#endGameRestartButton') event listener added.");
     }else{
       //Show player client screen
