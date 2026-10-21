@@ -24,16 +24,15 @@ discardButton.addEventListener('click', () => {
 
 function handleRestartButtonClick() {
 
-  restartButton.addEventListener('click', () => {
+  restartButton.addEventListener('click', async () => {
     console.log("Restart button clicked. Restarting the game...");
     if(isHost){
       restartGame();
-      updateGameStatus('playing');
+      await updateGameStatus('playing');
     }else{
       alert("Aguarde o host reiniciar o jogo.");
     }
     
-    restartGame();
   });
 }
 handleRestartButtonClick();
