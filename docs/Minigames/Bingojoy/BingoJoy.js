@@ -521,6 +521,7 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.updateGameStatus('starting');
+                await bingoJoyHostManager.SetGameState('starting');
                 await bingoJoyHostManager.resetGameForAllPlayers();
 
                  resetLocalGameState(); // Clear state and timer, but don't start a round yet
