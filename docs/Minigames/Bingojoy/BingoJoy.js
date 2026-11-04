@@ -526,7 +526,7 @@ function ShowEndGameScreen(){
                     modalOverlay.classList.remove('show');
 
                 startOverlay.classList.add('show');
-                initializeBingoUi();
+                await initializeBingoUi();
             }
         );
     }
