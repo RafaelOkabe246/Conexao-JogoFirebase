@@ -521,6 +521,7 @@ function ShowEndGameScreen(){
             'Iniciar nova partida',
             async () => {
                 await bingoJoyHostManager.updateGameStatus('playing');
+                await bingoJoyHostManager.SetGameState('starting');
                 await bingoJoyHostManager.resetGameForAllPlayers();
                     modalOverlay.classList.remove('show');
 
