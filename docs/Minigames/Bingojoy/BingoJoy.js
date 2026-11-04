@@ -521,7 +521,6 @@ function ShowEndGameScreen(){
                     modalOverlay.classList.remove('show');
 
                 startOverlay.classList.add('show');
-                            window.location.href = new URL('../../index.html', import.meta.url).href;
 
             }
         );
