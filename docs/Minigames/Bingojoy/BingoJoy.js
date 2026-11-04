@@ -556,8 +556,7 @@ function resetLocalGameState() {
     state.timer = ROUND_TIME;
     state.gameEnded = false;
 
-    renderLives();
-    renderBoard();
+    resetGame();
 }
 
 renderLives();
