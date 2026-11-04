@@ -409,6 +409,8 @@ function resetGame(){
     
 }
 
+
+//#region Audio functions
 let audioCtx;
 function ensureAudio(){
     if(!audioCtx){
@@ -443,6 +445,7 @@ function playMiss(){
 }
 function playWinSound(){ [523,659,784,1047].forEach((f,i)=>playTone(f,.18,'triangle',.03,i*.07)); }
 function playGameOverSound(){ [320,240,180].forEach((f,i)=>playTone(f,.22,'sawtooth',.03,i*.09)); }
+//#endregion
 
 historyBtn.addEventListener('click', showHistory);
 
@@ -502,7 +505,7 @@ function ShowWaitScreen(tile, body){
 }
 
 function ShowEndGameScreen(){
-    /*
+    
     startOverlay.classList.remove('show');
 
     if(!bingoJoyHostManager.GetIsHost()) {
@@ -523,8 +526,9 @@ function ShowEndGameScreen(){
             }
         );
     }
-    */
+    /*
     window.location.href = new URL('../../index.html', import.meta.url).href;
+    */
 
 }
 
