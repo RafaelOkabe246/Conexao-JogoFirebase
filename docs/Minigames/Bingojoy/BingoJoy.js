@@ -345,12 +345,13 @@ function endGame(win){
 
     console.log("End Game");
 
-    ShowWaitScreen(
-        win ? 'Você venceu!' : 'Game Over',
-        `<p>Cartela completa em ordem numérica.</p><p class="small">
-        Rodadas: <strong>${state.round}</strong><br>`
-    );
-    
+    if(isHost){
+        ShowWaitScreen(
+            win ? 'Você venceu!' : 'Game Over',
+            `<p>Cartela completa em ordem numérica.</p><p class="small">
+            Rodadas: <strong>${state.round}</strong><br>`
+        );  
+    }
 
     waitForEndGame();
 
