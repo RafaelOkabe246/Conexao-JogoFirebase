@@ -473,8 +473,6 @@ if (!isHost) return;
     playTone(480,.08,'triangle',.03,0);
     playTone(620,.08,'triangle',.03,.06);
 
-    bingoJoyHostManager.SetGameState('playing');
-    bingoJoyHostManager.updateGameStatus('playing');
 }
 
 async function startWithDifficultyClient(mode){
