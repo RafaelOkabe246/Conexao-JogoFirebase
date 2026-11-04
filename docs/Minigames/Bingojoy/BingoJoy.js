@@ -520,11 +520,12 @@ function ShowEndGameScreen(){
             `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>`,
             'Iniciar nova partida',
             async () => {
-                await bingoJoyHostManager.updateGameStatus('ended');
+                await bingoJoyHostManager.updateGameStatus('playing');
                 await bingoJoyHostManager.resetGameForAllPlayers();
                     modalOverlay.classList.remove('show');
 
                 startOverlay.classList.add('show');
+                initializeBingoUi();
             }
         );
     }
