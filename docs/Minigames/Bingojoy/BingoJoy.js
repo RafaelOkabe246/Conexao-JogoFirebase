@@ -526,8 +526,8 @@ function ShowEndGameScreen(){
                  resetLocalGameState(); // Clear state and timer, but don't start a round yet
 
                 modalOverlay.classList.remove('show');
-                //restoreDifficultyOverlay(); // Restore the difficulty buttons
                 startOverlay.classList.add('show');
+                startWithDifficulty('hard');   
             }
         );
     }
@@ -540,6 +540,7 @@ function ShowEndGameScreen(){
 
 easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
 hardBtn.addEventListener('click', () => startWithDifficulty('hard'));
+
 
 function resetLocalGameState() {
     clearInterval(state.timerId);
