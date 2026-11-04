@@ -39,6 +39,8 @@ const lobbyId = getCurrentLobbyId(); //|| new URLSearchParams(window.location.se
 const database = realtimeDB.getDatabase();
 
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
+const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/status`);
+
 const difficultyRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData/difficulty`)
 console.log("Game data path " + gameDataRef);
 
@@ -51,6 +53,35 @@ const MAX_NUMBER = 99;
 
 initializeBingoUi();
 
+handleLobbyUpdate();
+
+async function handleLobbyUpdate() {
+    // Implementation for handling lobby updates
+    isHost = await getIsHost();
+    console.log("Is host " + isHost);
+    
+    if(gameStatusRef && isHost === false){
+        console.log('Client listening for game status updates...');
+        realtimeDB.onValue(gameStatusRef, (snapshot) => {
+        const response = snapshot.val().toString();
+        console.log('Game status updated:', response);
+        
+        if (response === 'playing'){
+            console.log('Game status is now playing. Starting the game...');
+                    
+            realtimeDB.onValue(difficultyRef, (snapshot)=>{
+                const response = snapshot.val().toString();
+                console.log("GEer");
+                if(response === "easy" || response === "hard"){
+
+                    startWithDifficultyClient(response);
+                }
+            });
+        }
+        });
+    }
+}
+
 async function initializeBingoUi() {
     isHost = await getIsHost();
     console.log("Is host " + isHost);
@@ -61,24 +92,6 @@ async function initializeBingoUi() {
         ShowWaitScreen("Esperando o host", "O host está escolhendo a dificuldade da rodada.");
     }
 
-    if(gameDataRef && isHost === false)    
-    {
-        console.log("Dificult data ref  " + difficultyRef.toString());
-
-        
-        realtimeDB.onValue(difficultyRef, (snapshot)=>{
-            const response = snapshot.val().toString();
-            console.log("GEer");
-            if(response === "easy" || response === "hard"){
-
-                startWithDifficultyClient(response);
-            }
-        });
-    }
-    if(gameDataRef && isHost === true)    
-    {
-
-    }
 }
 
 
@@ -455,6 +468,7 @@ if (!isHost) return;
     playTone(620,.08,'triangle',.03,.06);
 
     bingoJoyHostManager.SetGameState('playing');
+    bingoJoyHostManager.updateGameStatus('playing');
 }
 
 async function startWithDifficultyClient(mode){

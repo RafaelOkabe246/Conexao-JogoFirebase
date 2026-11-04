@@ -170,6 +170,14 @@ class BingoJoyHostManager {
         });
     }
 
+    async updateGameStatus(status){
+        if(gameStatusRef && isHost){
+        console.log('Updating game status in the database...');
+        await realtimeDB.set(gameStatusRef, status);
+        console.log('Game status updated:', status);
+        }
+    }
+
     async SetGameState(state) {
         if(!this.IsHost) return;
         await realtimeDB.update(this.gameStateRef, { GameState: state });
