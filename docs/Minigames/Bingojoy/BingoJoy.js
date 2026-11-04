@@ -520,13 +520,14 @@ function ShowEndGameScreen(){
             `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>`,
             'Iniciar nova partida',
             async () => {
-                await bingoJoyHostManager.updateGameStatus('playing');
-                await bingoJoyHostManager.SetGameState('starting');
+                await bingoJoyHostManager.updateGameStatus('starting');
                 await bingoJoyHostManager.resetGameForAllPlayers();
-                    modalOverlay.classList.remove('show');
 
+                 resetLocalGameState(); // Clear state and timer, but don't start a round yet
+
+                modalOverlay.classList.remove('show');
+                //restoreDifficultyOverlay(); // Restore the difficulty buttons
                 startOverlay.classList.add('show');
-                await initializeBingoUi();
             }
         );
     }
@@ -537,13 +538,25 @@ function ShowEndGameScreen(){
 }
 
 
-
 easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
 hardBtn.addEventListener('click', () => startWithDifficulty('hard'));
 
+function resetLocalGameState() {
+    clearInterval(state.timerId);
+    state.maxLives = 3;
+    state.lives = 3;
+    state.round = 0;
+    state.board = Array(TOTAL_CELLS).fill(null);
+    state.usedNumbers.clear();
+    state.currentOptions = [];
+    state.selectedNumber = null;
+    state.history = [];
+    state.timer = ROUND_TIME;
+    state.gameEnded = false;
 
-
-
+    renderLives();
+    renderBoard();
+}
 
 renderLives();
 renderBoard();
