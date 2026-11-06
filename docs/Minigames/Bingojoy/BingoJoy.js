@@ -94,7 +94,7 @@ async function initializeBingoUi() {
 
 }
 
-
+//#region Ui and game functionss
 
 function heartSVG(){
     return `
@@ -131,6 +131,11 @@ function renderBoard(){
     boardEl.appendChild(cell);
     });
     updateValidPositions();
+}
+
+function renderBallLives(){
+    renderLives();
+    renderBoard();
 }
 
 function renderBalls(){
@@ -179,6 +184,8 @@ function updateValidPositions(){
 }
 
 function setMessage(text){ messageEl.textContent = text; }
+
+//#endregion
 
 //#region Build round options
 function buildRoundOptions(count = NUMBERS_PER_ROUND, maxNumber = MAX_NUMBER){
@@ -390,10 +397,6 @@ async function playerEndedGame(hasWon){
 }
 
 
-function listenAllPlayers(){
-    //realtimeDB.onValue()
-}
-
 function resetGame(){
     
     state.maxLives = state.difficulty === 'easy' ? 5 : 3;
@@ -522,7 +525,7 @@ function ShowEndGameScreen(){
                 await bingoJoyHostManager.SetGameState('starting');
                 await bingoJoyHostManager.resetGameForAllPlayers();
 
-                 resetLocalGameState(); // Clear state and timer, but don't start a round yet
+                startRound();
 
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
@@ -541,21 +544,5 @@ easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
 hardBtn.addEventListener('click', () => startWithDifficulty('hard'));
 
 
-function resetLocalGameState() {
-    clearInterval(state.timerId);
-    state.maxLives = 3;
-    state.lives = 3;
-    state.round = 0;
-    state.board = Array(TOTAL_CELLS).fill(null);
-    state.usedNumbers.clear();
-    state.currentOptions = [];
-    state.selectedNumber = null;
-    state.history = [];
-    state.timer = ROUND_TIME;
-    state.gameEnded = false;
 
-    resetGame();
-}
-
-renderLives();
-renderBoard();
+renderBallLives();
