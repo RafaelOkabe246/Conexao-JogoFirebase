@@ -525,7 +525,7 @@ function ShowEndGameScreen(){
                 await bingoJoyHostManager.SetGameState('starting');
                 await bingoJoyHostManager.resetGameForAllPlayers();
 
-                startRound();
+                resetGame();
 
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
