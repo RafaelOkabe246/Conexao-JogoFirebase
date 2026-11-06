@@ -526,7 +526,7 @@ function ShowEndGameScreen(){
                 await bingoJoyHostManager.resetGameForAllPlayers();
 
                 resetGame();
-
+                console.log("Game reset for all players");
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
                 startWithDifficulty('hard');   
