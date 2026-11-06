@@ -62,6 +62,8 @@ class BingoJoyHostManager {
         this.gameDataRef = realtimeDB.ref(this.database, `${lobbyPath}/GameData`);
         this.playerRef = realtimeDB.ref(this.database, `${lobbyPath}/players/${this.userId}`);
         this.playersRef = realtimeDB.ref(this.database, `${lobbyPath}/players`);
+        this.gameStatusRef = realtimeDB.ref(this.database, `${lobbyPath}/status`);
+        
     }
 
     async initializeHostState() {
@@ -171,7 +173,7 @@ class BingoJoyHostManager {
     }
 
     async updateGameStatus(status){
-        if(gameStatusRef && isHost){
+        if(this.gameStatusRef && isHost){
         console.log('Updating game status in the database...');
         await realtimeDB.set(gameStatusRef, status);
         console.log('Game status updated:', status);
