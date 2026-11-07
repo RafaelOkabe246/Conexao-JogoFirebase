@@ -66,7 +66,7 @@ async function handleLobbyUpdate() {
         const response = snapshot.val().toString();
         console.log('Game status updated:', response);
         
-        if (response === 'playing'){
+        if (response === 'starting') {
             console.log('Game status is now playing. Starting the game...');
                     
             realtimeDB.onValue(difficultyRef, (snapshot)=>{
