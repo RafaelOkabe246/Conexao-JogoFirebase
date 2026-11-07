@@ -13,7 +13,7 @@ async function setPlayerConnected(userId, lobbyId) {
         `lobbies/${lobbyId}/players/${userId}`
     );
 
-    await realtimeDB.onDisconnect(playerRef).update({ connected: false });
+    await realtimeDB.onDisconnect(playerRef).remove();
     await realtimeDB.update(playerRef, { connected: true });
 }
 
@@ -130,7 +130,8 @@ export async function joinLobby(userId, lobbyId) {
         lobbyListenerUnsubscribe();
     }
 
-    lobbyListenerUnsubscribe = realtimeDB.onValue(lobbyRef, (snapshot) => {
+    let isRedirectingToGame = false;
+    lobbyListenerUnsubscribe = realtimeDB.onValue(lobbyRef, async (snapshot) => {
         const updatedRoomData = snapshot.val();
         if (!updatedRoomData) {
             return;
@@ -154,13 +155,27 @@ export async function joinLobby(userId, lobbyId) {
 
 
         //Listen if game started, if so, redirect to game page
-        if (updatedRoomData.status === 'starting') {
+        if (updatedRoomData.status === 'starting' && !isRedirectingToGame) {
             console.log('Game started! Redirecting to game page...');
-            currentLobbyId = lobbyId;
-            setCurrentLobbyId(lobbyId);
+            const minigamePage = returnMinigamePage(updatedRoomData.miniGame);
+            if (!minigamePage) {
+                return;
+            }
 
-            //window.location.href = `./Minigames/Bingojoy/BingoJoy.html?lobbyId=${lobbyId}`;
-            window.location.href = returnMinigamePage(updatedRoomData.miniGame);
+            isRedirectingToGame = true;
+            try {
+                const playerRef = realtimeDB.ref(
+                    realtimeDB.getDatabase(),
+                    `lobbies/${lobbyId}/players/${userId}`
+                );
+                await realtimeDB.onDisconnect(playerRef).cancel();
+                currentLobbyId = lobbyId;
+                setCurrentLobbyId(lobbyId);
+                window.location.href = minigamePage;
+            } catch (error) {
+                isRedirectingToGame = false;
+                console.error('Failed to prepare lobby connection for game navigation:', error);
+            }
         }
     });
 
