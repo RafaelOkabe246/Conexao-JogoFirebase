@@ -161,7 +161,7 @@ export async function joinLobby(userId, lobbyId) {
             if (!minigamePage) {
                 return;
             }
-
+            
             isRedirectingToGame = true;
             try {
                 const playerRef = realtimeDB.ref(
