@@ -96,6 +96,21 @@ if(startGameBtn) {
     });
 }
 
+if(leaveBtn) {
+    leaveBtn.addEventListener("click", async () => {
+        const userId = authentication.getUserId();
+        const lobbyId = lobby.getCurrentLobbyId();
+
+        if (!userId || !lobbyId) {
+            console.error("Cannot leave lobby without an authenticated user and lobby.");
+            return;
+        }
+
+        await lobby.leaveLobby(userId, lobbyId);
+        setDisplay(lobbyContainer, "none");
+    });
+}
+
 
 //Minigames options
 if(bingoJoyBtn){
@@ -122,6 +137,5 @@ if(sevensBtn){
 export function showStartGameButton() {
     setDisplay(startGameBtn, "block");
 }
-
 
 

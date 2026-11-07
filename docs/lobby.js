@@ -5,6 +5,17 @@ import * as menu from "./menu.js";
 let currentLobbyId = null; // Store the current lobby ID
 
 let isHost = false; // Store whether the current user is the host
+let lobbyListenerUnsubscribe = null;
+
+async function setPlayerConnected(userId, lobbyId) {
+    const playerRef = realtimeDB.ref(
+        realtimeDB.getDatabase(),
+        `lobbies/${lobbyId}/players/${userId}`
+    );
+
+    await realtimeDB.onDisconnect(playerRef).update({ connected: false });
+    await realtimeDB.update(playerRef, { connected: true });
+}
 
 export function getCurrentLobbyId() {
     if (!currentLobbyId && typeof window !== 'undefined') {
@@ -103,6 +114,7 @@ export async function joinLobby(userId, lobbyId) {
 
 
     // Add player to the room
+    await setPlayerConnected(userId, lobbyId);
     await realtimeDB.update(lobbyRef, {
         [`players/${userId}/ready`]: false,
         [`players/${userId}/playerEndedGame`]: false
@@ -114,8 +126,15 @@ export async function joinLobby(userId, lobbyId) {
     }
 
     // Start listening for changes in the room
-    realtimeDB.onValue(lobbyRef, (snapshot) => {
+    if (lobbyListenerUnsubscribe) {
+        lobbyListenerUnsubscribe();
+    }
+
+    lobbyListenerUnsubscribe = realtimeDB.onValue(lobbyRef, (snapshot) => {
         const updatedRoomData = snapshot.val();
+        if (!updatedRoomData) {
+            return;
+        }
         console.log(`Lobby ${lobbyId} updated:`, updatedRoomData);
         
         // Here you can update your UI based on the new room data
@@ -186,6 +205,11 @@ export async function getIsHost(){
         return false;
     }
 
+    if (!roomData.players?.[userId]) {
+        return false;
+    }
+
+    await setPlayerConnected(userId, lobbyId);
     return roomData.host === userId;
 }
 
@@ -208,15 +232,20 @@ export async function getCurrrentLobbyId(){
 
 
 export async function leaveLobby(userId, lobbyId) {
-    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
+    const playerRef = realtimeDB.ref(
+        realtimeDB.getDatabase(),
+        `lobbies/${lobbyId}/players/${userId}`
+    );
 
-    // Remove player from the room
-    await realtimeDB.update(lobbyRef, {
-        [`players/${userId}`]: null
-    });
+    await realtimeDB.onDisconnect(playerRef).cancel();
+    await realtimeDB.remove(playerRef);
 
-    //Disconect from the room
-    realtimeDB.onDisconnect(lobbyRef).remove();
+    if (lobbyListenerUnsubscribe) {
+        lobbyListenerUnsubscribe();
+        lobbyListenerUnsubscribe = null;
+    }
+    currentLobbyId = null;
+    isHost = false;
 }
 
 export async function toggleReadyStatus() {

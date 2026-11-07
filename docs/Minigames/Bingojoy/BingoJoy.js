@@ -80,6 +80,7 @@ async function handleLobbyUpdate() {
         }
         });
     }
+
 }
 
 async function initializeBingoUi() {
