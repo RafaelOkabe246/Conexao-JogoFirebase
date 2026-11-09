@@ -153,6 +153,13 @@ export async function joinLobby(userId, lobbyId) {
             
         }
 
+        //Listen if the host exit the game, if so, leave and redirect to menu
+        if (updatedRoomData.status === 'ended') {
+            console.log('Host has ended the game. Redirecting to menu...');
+            alert('Host has ended the game. Returning to menu.');
+            leaveLobby(userId, lobbyId);
+            window.location.href = '../../index.html';
+        }
 
         //Listen if game started, if so, redirect to game page
         if (updatedRoomData.status === 'starting' && !isRedirectingToGame) {
@@ -254,6 +261,13 @@ export async function getCurrrentLobbyId(){
 
 export async function leaveLobby(userId, lobbyId) {
     console.log(`Leaving lobby ${lobbyId} for user ${userId}`);
+
+    if(isHost) {
+        // If the user is the host, update the lobby status to 'ended'
+        const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
+        await realtimeDB.update(lobbyRef, { status: 'ended' });
+    }
+
     const playerRef = realtimeDB.ref(
         realtimeDB.getDatabase(),
         `lobbies/${lobbyId}/players/${userId}`
