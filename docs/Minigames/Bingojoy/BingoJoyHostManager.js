@@ -2,7 +2,7 @@ import {MiniGameHostManagerClass} from '../MinigameHostManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 
 import * as authentication from "../../authentication.js";
-import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
+import { getCurrentLobbyId, getIsHost, leaveLobby } from "../../lobby.js";
 
 class BingoJoyHostManager {
     constructor(userId) {
@@ -268,6 +268,15 @@ class BingoJoyHostManager {
 
     }
 
+
+    leaveGame() {
+        // Implement the logic to leave the game
+        if (this.IsHost) {
+            this.updateGameStatus('ended');
+        }
+
+        leaveLobby();
+    }
 
     async allPlayersEndedGame() {
         const snapshot = await realtimeDB.get(this.playersRef);

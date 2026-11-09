@@ -247,6 +247,7 @@ export async function getCurrrentLobbyId(){
 
 
 export async function leaveLobby(userId, lobbyId) {
+    console.log(`Leaving lobby ${lobbyId} for user ${userId}`);
     const playerRef = realtimeDB.ref(
         realtimeDB.getDatabase(),
         `lobbies/${lobbyId}/players/${userId}`
