@@ -172,6 +172,13 @@ export async function joinLobby(userId, lobbyId) {
                 currentLobbyId = lobbyId;
                 setCurrentLobbyId(lobbyId);
                 window.location.href = minigamePage;
+
+                // Set up a beforeunload event listener to handle leaving the game
+                window.addEventListener('beforeunload', async (event) => {
+                    //Disconnect the player from the game when leaving the page
+                    await bjManager.ensureRefs();
+                    await bjManager.leaveGame();
+                });
             } catch (error) {
                 isRedirectingToGame = false;
                 console.error('Failed to prepare lobby connection for game navigation:', error);
