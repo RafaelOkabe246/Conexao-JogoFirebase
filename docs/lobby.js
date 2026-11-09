@@ -153,13 +153,6 @@ export async function joinLobby(userId, lobbyId) {
             
         }
 
-        //Listen if the host exit the game, if so, leave and redirect to menu
-        if (updatedRoomData.status === 'ended') {
-            console.log('Host has ended the game. Redirecting to menu...');
-            alert('Host has ended the game. Returning to menu.');
-            leaveLobby(userId, lobbyId);
-            window.location.href = '../../index.html';
-        }
 
         //Listen if game started, if so, redirect to game page
         if (updatedRoomData.status === 'starting' && !isRedirectingToGame) {
