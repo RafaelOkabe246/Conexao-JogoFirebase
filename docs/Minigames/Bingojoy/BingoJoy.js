@@ -310,25 +310,36 @@ function onRoundTimeout(){
     }
 }
 
-function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = true){
+function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = true, extraButton = null, extraButtonCallback = null){
     if(hasButton === false)
-        {
-    modalContent.innerHTML = `
-    <h2>${title}</h2>
-    ${body}
-    `;
+    {
+        modalContent.innerHTML = `
+        <h2>${title}</h2>
+        ${body}
+        `;
     }
     modalContent.innerHTML = `
-    <h2>${title}</h2>
-    ${body}
-    <button id="modalAction">${buttonText}</button>
+        <h2>${title}</h2>
+        ${body}
+        <button id="modalAction">${buttonText}</button>
     `;
+
+    if (extraButton) {
+        modalContent.innerHTML += `<button id="modalExtra">${extraButton.text}</button>`;
+    }
 
     modalOverlay.classList.add('show');
     document.getElementById('modalAction').onclick = () => {
     modalOverlay.classList.remove('show');
     if(onClose) onClose();
     };
+
+    if (extraButton && extraButtonCallback) {
+        document.getElementById('modalExtra').onclick = () => {
+            modalOverlay.classList.remove('show');
+            extraButtonCallback();
+        };
+    }
 }
 
 function showHistory(){
@@ -530,7 +541,14 @@ function ShowEndGameScreen(){
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
                 startWithDifficulty('hard');   
-            }
+            },
+            'Sair do jogo',
+            async () => {
+                await bingoJoyHostManager.updateGameStatus('ended');
+                await bingoJoyHostManager.SetGameState('ended');
+                modalOverlay.classList.remove('show');
+                startOverlay.classList.add('show');
+                ShowWaitScreen('Fim de jogo', `<p>O host encerrou a partida.</p><p class="small">Você será redirecionado para a tela inicial.</p>`);
         );
     }
     /*
