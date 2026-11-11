@@ -84,7 +84,6 @@ class MaisOuMenorPlayerManager {
         });
     }
 
-
     async allPlayersEndedGame() {
         const snapshot = await realtimeDB.get(this.playersRef);
         if(!snapshot.exists()) {
