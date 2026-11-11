@@ -34,6 +34,7 @@ let hasGameEnded = false;
     game: document.getElementById('gameScreen'),
     result: document.getElementById('resultScreen'),
     resultClient: document.getElementById('resultScreenClient'),
+    menuBtn: document.getElementById('menuBtn'),
     playBtnHost: document.getElementById('playBtnHost'),
     playBtn: document.getElementById('playBtn'),
     restartBtn: document.getElementById('restartBtn'),
@@ -701,6 +702,11 @@ let hasGameEnded = false;
   elements.playBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.playBtnHost.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
+  elements.menuBtn.addEventListener('click', () => {
+    playClickSound();
+    
+    window.location.href = new URL('../../index.html', import.meta.url).href;
+  });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
   elements.lowerBtn.addEventListener('click', () => drawNext('lower'));
   elements.stopBtn.addEventListener('click', stopAndBank);
