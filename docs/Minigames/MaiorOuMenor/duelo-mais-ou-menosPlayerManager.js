@@ -15,6 +15,9 @@ class MaisOuMenorPlayerManager {
         this.gameDataRef = null;
         this.playerRef = null;
         this.playersRef = null;
+        this.gameStateRef = null;
+        this.gameStatusRef = null;
+        this.IsHost = getIsHost();
         this.ensureRefs();
         //this.SetUpGameData();
     }
@@ -43,6 +46,7 @@ class MaisOuMenorPlayerManager {
         this.gameDataRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/GameData`);
         this.playerRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/players/${this.userId}`);
         this.playersRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/players`);
+        this.gameStatusRef = realtimeDB.ref(this.database, `lobbies/${this.lobbyId}/GameStatus`);
         /*
         if (!this.userId) {
             this.userId = await authentication.waitForUserId();
@@ -82,6 +86,28 @@ class MaisOuMenorPlayerManager {
         await realtimeDB.update(this.playerRef, {
             playerEndedGame: playerEndedGame
         });
+    }
+
+    async closeGame() {
+        updateGameStatus('ended');
+        SetGameState('ended');
+    }
+
+    async updateGameStatus(status){
+        if(this.gameStatusRef && this.IsHost){
+        console.log('Updating game status in the database...');
+        await realtimeDB.set(this.gameStatusRef, status);
+        console.log('Game status updated:', status);
+        }
+    }
+
+    async SetGameState(state) {
+        if(!this.IsHost) return;
+        await realtimeDB.update(this.gameStateRef, { GameState: state });
+    }
+
+    redirectToIndexPage() {
+            window.location.href = new URL('../../index.html', import.meta.url).href;
     }
 
     async allPlayersEndedGame() {

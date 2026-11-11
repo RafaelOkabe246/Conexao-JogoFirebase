@@ -100,6 +100,10 @@ let hasGameEnded = false;
           console.log('Game status is now playing. Starting the game...');
           startGame();
         }
+                if (response === 'ended') {
+            console.log('Game ended. Returning to index page...');
+            playerManager.redirectToIndexPage();
+        }
       });
     } 
 
@@ -704,12 +708,13 @@ let hasGameEnded = false;
   elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
 
-    elements.menuBtn.addEventListener('click', () => {
+  elements.menuBtn.addEventListener('click', async () => {
     playClickSound();
 
     console.log('Returning to index page...');
-    maisOuMenorPlayerManager
-    window.location.href = new URL('../../index.html', import.meta.url).href;
+    await maisOuMenorPlayerManager.closeGame();
+
+    await maisOuMenorPlayerManager.redirectToIndexPage();
   });
 
   elements.lowerBtn.addEventListener('click', () => drawNext('lower'));
