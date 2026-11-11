@@ -704,7 +704,8 @@ let hasGameEnded = false;
   elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.menuBtn.addEventListener('click', () => {
     playClickSound();
-    
+
+    console.log('Returning to index page...');
     window.location.href = new URL('../../index.html', import.meta.url).href;
   });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
