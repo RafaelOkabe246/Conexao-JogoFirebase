@@ -38,6 +38,7 @@ const modalContent = document.getElementById('modalContent');
 const lobbyId = getCurrentLobbyId(); //|| new URLSearchParams(window.location.search).get('lobbyId');
 const database = realtimeDB.getDatabase();
 
+
 const gameDataRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData`);
 const gameStatusRef = realtimeDB.ref(database, `lobbies/${lobbyId}/status`);
 
@@ -54,6 +55,11 @@ const MAX_NUMBER = 99;
 initializeBingoUi();
 
 handleLobbyUpdate();
+
+const redirectToIndexPage = () => {
+    window.location.href = new URL('../../index.html', import.meta.url).href;
+};
+
 
 async function handleLobbyUpdate() {
     // Implementation for handling lobby updates
@@ -77,6 +83,11 @@ async function handleLobbyUpdate() {
                     startWithDifficultyClient(response);
                 }
             });
+        }
+
+        if (response === 'ended') {
+            console.log('Game ended. Returning to index page...');
+            redirectToIndexPage();
         }
         });
     }
@@ -550,12 +561,10 @@ function ShowEndGameScreen(){
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
                 console.log("Game ended for all players");
+                redirectToIndexPage();
             }
         );
     }
-    /*
-    window.location.href = new URL('../../index.html', import.meta.url).href;
-    */
 
 }
 
