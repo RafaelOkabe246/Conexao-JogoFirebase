@@ -542,6 +542,7 @@ function ShowEndGameScreen(){
                 startOverlay.classList.add('show');
                 startWithDifficulty('hard');   
             },
+            true,
             'Sair do jogo',
             async () => {
                 await bingoJoyHostManager.updateGameStatus('ended');
