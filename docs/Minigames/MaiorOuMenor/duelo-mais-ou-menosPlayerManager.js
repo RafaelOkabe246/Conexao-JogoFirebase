@@ -89,8 +89,8 @@ class MaisOuMenorPlayerManager {
     }
 
     async closeGame() {
-        updateGameStatus('ended');
-        SetGameState('ended');
+        await this.updateGameStatus('ended');
+        await this.SetGameState('ended');
     }
 
     async updateGameStatus(status){

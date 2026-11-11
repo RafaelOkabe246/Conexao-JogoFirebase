@@ -100,7 +100,7 @@ let hasGameEnded = false;
           console.log('Game status is now playing. Starting the game...');
           startGame();
         }
-                if (response === 'ended') {
+        if (response === 'ended') {
             console.log('Game ended. Returning to index page...');
             playerManager.redirectToIndexPage();
         }
@@ -712,9 +712,9 @@ let hasGameEnded = false;
     playClickSound();
 
     console.log('Returning to index page...');
-    await maisOuMenorPlayerManager.closeGame();
+    await playerManager.closeGame();
 
-    await maisOuMenorPlayerManager.redirectToIndexPage();
+   playerManager.redirectToIndexPage();
   });
 
   elements.lowerBtn.addEventListener('click', () => drawNext('lower'));
