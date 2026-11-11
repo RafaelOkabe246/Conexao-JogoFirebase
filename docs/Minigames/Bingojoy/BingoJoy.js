@@ -548,7 +548,7 @@ function ShowEndGameScreen(){
                 await bingoJoyHostManager.SetGameState('ended');
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
-                ShowWaitScreen('Fim de jogo', `<p>O host encerrou a partida.</p><p class="small">Você será redirecionado para a tela inicial.</p>`);
+            }
         );
     }
     /*
