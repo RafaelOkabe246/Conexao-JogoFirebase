@@ -310,7 +310,7 @@ function onRoundTimeout(){
     }
 }
 
-function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = true, extraButton = null, extraButtonCallback = null){
+function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = true, extraButton = 'Extra button', extraButtonCallback = null){
     if(hasButton === false)
     {
         modalContent.innerHTML = `
@@ -325,7 +325,7 @@ function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = t
     `;
 
     if (extraButton) {
-        modalContent.innerHTML += `<button id="modalExtra">${extraButton.text}</button>`;
+        modalContent.innerHTML += `<button id="modalExtra">${extraButton}</button>`;
     }
 
     modalOverlay.classList.add('show');
@@ -335,9 +335,9 @@ function showModal(title, body, buttonText='Fechar', onClose=null, hasButton = t
     };
 
     if (extraButton && extraButtonCallback) {
-        document.getElementById('modalExtra').onclick = () => {
+        document.getElementById('modalExtra').onclick = async () => {
             modalOverlay.classList.remove('show');
-            extraButtonCallback();
+            await extraButtonCallback();
         };
     }
 }
