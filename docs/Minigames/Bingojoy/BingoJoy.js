@@ -548,6 +548,7 @@ function ShowEndGameScreen(){
                 await bingoJoyHostManager.SetGameState('ended');
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
+                console.log("Game ended for all players");
             }
         );
     }
