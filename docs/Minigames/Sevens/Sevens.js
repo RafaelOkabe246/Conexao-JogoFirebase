@@ -409,10 +409,11 @@ function updateScore(){
     await playerManager.updatePlayerStatus(true);
     await handleLobbyUpdate();
 
-    
- 
 
-  const msg=document.getElementById('message');
+  const msg = document.getElementById('message');
+  const leaveButton = document.getElementById('endGameLeaveButton');
+
+
   msg.style.display='flex';
     if(isHost){
       console.log("Host showing end game screen...");
@@ -437,6 +438,13 @@ function updateScore(){
   `;
     msg.querySelector('#endGameRestartButton')
   .addEventListener('click', handleRestartButtonClick(msg.querySelector('#endGameRestartButton')));
+  leaveButton.querySelector('#endGameLeaveButton')
+  .addEventListener('click', () => {
+    console.log("Leave button clicked. Leaving the game...");
+    playerManager.redirectToIndexPage();
+  });
+
+
     }else{
       //Show player client screen
       msg.innerHTML=`
