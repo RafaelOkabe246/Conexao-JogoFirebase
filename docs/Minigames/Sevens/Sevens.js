@@ -18,9 +18,9 @@ const discardButton = document.getElementById('discardButton');
 const restartButton = document.getElementById('restartButton');
 const leaveButton = document.getElementById('endGameLeaveButton');
 
-leaveButton.addEventListener('click', () => {
+leaveButton.addEventListener('click', async () => {
   console.log("Leave button clicked. Leaving the game...");
-  playerManager.redirectToIndexPage();
+  await updateGameStatus("ended");
 });
 
 discardButton.addEventListener('click', () => {
