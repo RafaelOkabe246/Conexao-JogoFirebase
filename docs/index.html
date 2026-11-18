@@ -10,47 +10,19 @@
     <script type="module" src="./menu.js"></script>
 </head>
 <body>
-    <div>
+    <main>
         <h1>Party Game</h1>
-        <a>Test bingo game</a>
         <p>Welcome to the Party Game!</p>
         <ul>
-            <li><button id="authenticateBtn">Authenticate</button></li>
-            <li><button id="cleanupBtn">Clean up Lobbies</button></li>
+            <li><button id="authenticateBtn" type="button">Authenticate</button></li>
+            <li><button id="cleanupBtn" type="button">Clean up Lobbies</button></li>
+            <li><button id="createLobbyBtn" type="button">Create Lobby</button></li>
         </ul>
-        <ul>
-            <li><button id="createLobbyBtn">Create Lobby</button></li>
-        </ul>
-        
-    </div>
-    <div>
-        <label for="roomCodeInput">Room Code:</label>
-        <input type="text" id="roomCodeInput" placeholder="Enter room code">
-        <button id="joinLobbyBtn">Join Lobby with Code</button>
-    </div>
-    <div class="lobby-container" id="lobbyContainer" style="display: none;">
-        <h2>Lobby</h2>
-        <p id="lobbyInfo"></p>
-        <ul id="playerList"></ul>
-        <button id="readyBtn">Ready</button>
-        <button id="startGameBtn">Start Game</button>
-        <button id="leaveBtn">Leave Lobby</button>
         <div>
-            <p>Lobby Id: <span id="lobbyId"></span></p>
-            <p>Current Minigame: <span id="currentMinigame"></span></p> 
+            <label for="roomCodeInput">Room Code:</label>
+            <input type="text" id="roomCodeInput" placeholder="Enter room code">
+            <button id="joinLobbyBtn" type="button">Join Lobby with Code</button>
         </div>
-
-        <div class="minigames-options-container">
-            <!--Minigame selection options-->
-            <ul>
-                <li><button id = "bingoJoyBtn">Bingo Joy</button></li>
-                <li><button id= "maiorOuMenorBtn">Maior ou Menor</button></li>
-                <li><button id= "sevensBtn">Sevens</button></li>
-
-            </ul>
-        </div>
-
-    </div>
-
+    </main>
 </body>
 </html>

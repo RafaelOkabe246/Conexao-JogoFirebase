@@ -120,12 +120,35 @@ export async function joinLobby(userId, lobbyId) {
         [`players/${userId}/playerEndedGame`]: false
     });
 
-    //Verify is is host
-    if (roomData.host === userId) {
-        isHost = true;
+    attachLobbyListener(userId, lobbyId, roomData);
+    window.location.href = `./lobby.html?lobbyId=${encodeURIComponent(lobbyId)}`;
+    return true;
+}
+
+export async function initializeLobby(userId, lobbyId) {
+    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
+    const roomSnapshot = await realtimeDB.get(lobbyRef);
+    if (!roomSnapshot.exists()) {
+        console.error(`Lobby ${lobbyId} does not exist.`);
+        return false;
     }
 
-    // Start listening for changes in the room
+    const roomData = roomSnapshot.val();
+    if (!roomData.players?.[userId]) {
+        console.error(`User ${userId} is not a member of lobby ${lobbyId}.`);
+        return false;
+    }
+
+    await setPlayerConnected(userId, lobbyId);
+    attachLobbyListener(userId, lobbyId, roomData);
+    return true;
+}
+
+function attachLobbyListener(userId, lobbyId, roomData) {
+    const lobbyRef = realtimeDB.ref(realtimeDB.getDatabase(), `lobbies/${lobbyId}`);
+    currentLobbyId = lobbyId;
+    isHost = roomData.host === userId;
+
     if (lobbyListenerUnsubscribe) {
         lobbyListenerUnsubscribe();
     }
@@ -137,24 +160,43 @@ export async function joinLobby(userId, lobbyId) {
             return;
         }
         console.log(`Lobby ${lobbyId} updated:`, updatedRoomData);
-        
-        // Here you can update your UI based on the new room data
+        const lobbyIdDisplay = document.getElementById("lobbyId");
+        const currentMinigameDisplay = document.getElementById("currentMinigame");
+        const lobbyInfo = document.getElementById("lobbyInfo");
+        const playerList = document.getElementById("playerList");
+        const readyBtn = document.getElementById("readyBtn");
 
-
-        //Only host can start the game, so check if current user is host
-        if (isHost) {
-            //Check if all players are ready, if so, start the game (if has just host wait)
-            let allReady = checkAllPlayersReady(lobbyRef, updatedRoomData);
-            console.log("WRRERW");
-            if(allReady) {
-                console.log('All players are ready. Starting the game...');
-                menu.showStartGameButton();
-            }
-            
+        if (lobbyIdDisplay) {
+            lobbyIdDisplay.textContent = lobbyId;
+            lobbyIdDisplay.style.display = "inline-block";
+        }
+        if (currentMinigameDisplay) {
+            currentMinigameDisplay.textContent = updatedRoomData.miniGame || "Not selected";
+        }
+        if (playerList) {
+            playerList.replaceChildren();
+            Object.entries(updatedRoomData.players || {}).forEach(([playerId, player], index) => {
+                const listItem = document.createElement("li");
+                const currentPlayer = playerId === userId ? " (You)" : "";
+                const readyStatus = player.ready ? "Ready" : "Not ready";
+                listItem.textContent = `Player ${index + 1}${currentPlayer} - ${readyStatus}`;
+                playerList.appendChild(listItem);
+            });
+        }
+        if (readyBtn && updatedRoomData.players?.[userId]) {
+            readyBtn.textContent = updatedRoomData.players[userId].ready ? "Not Ready" : "Ready";
+        }
+        if (lobbyInfo) {
+            lobbyInfo.textContent = isHost ? "You are the host." : "Waiting for the host to start the game.";
         }
 
+        if (isHost) {
+            const allReady = checkAllPlayersReady(lobbyRef, updatedRoomData);
+            if (allReady) {
+                menu.showStartGameButton();
+            }
+        }
 
-        //Listen if game started, if so, redirect to game page
         if (updatedRoomData.status === 'starting' && !isRedirectingToGame) {
             console.log('Game started! Redirecting to game page...');
             const minigamePage = returnMinigamePage(updatedRoomData.miniGame);
@@ -169,13 +211,9 @@ export async function joinLobby(userId, lobbyId) {
                     `lobbies/${lobbyId}/players/${userId}`
                 );
                 await realtimeDB.onDisconnect(playerRef).cancel();
-                currentLobbyId = lobbyId;
-                setCurrentLobbyId(lobbyId);
                 window.location.href = minigamePage;
 
-                // Set up a beforeunload event listener to handle leaving the game
                 window.addEventListener('beforeunload', async (event) => {
-                    //Disconnect the player from the game when leaving the page
                     await leaveLobby(userId, lobbyId);
                 });
             } catch (error) {
@@ -184,9 +222,6 @@ export async function joinLobby(userId, lobbyId) {
             }
         }
     });
-
-
-    return true;
 }
 
 function returnMinigamePage(minigame) {

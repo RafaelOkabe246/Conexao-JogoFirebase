@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Game - Lobby</title>
+
+    <link rel="stylesheet" href="./menuStyle.css">
+    <script type="module" src="./menu.js"></script>
+    <script type="module" src="./lobbyPage.js"></script>
+</head>
+<body>
+    <main class="lobby-container" id="lobbyContainer">
+        <h1>Lobby</h1>
+        <p id="lobbyInfo" aria-live="polite">Connecting to lobby...</p>
+        <p>Lobby ID: <span id="lobbyId"></span></p>
+        <p>Current minigame: <span id="currentMinigame">Not selected</span></p>
+
+        <h2>Players</h2>
+        <ul id="playerList"></ul>
+
+        <div class="minigames-options-container">
+            <h2>Select a minigame</h2>
+            <ul>
+                <li><button id="bingoJoyBtn" type="button">Bingo Joy</button></li>
+                <li><button id="maiorOuMenorBtn" type="button">Maior ou Menor</button></li>
+                <li><button id="sevensBtn" type="button">Sevens</button></li>
+            </ul>
+        </div>
+
+        <button id="readyBtn" type="button">Ready</button>
+        <button id="startGameBtn" type="button">Start Game</button>
+        <button id="leaveBtn" type="button">Leave Lobby</button>
+        <p><a href="./index.html">Return to menu</a></p>
+    </main>
+</body>
+</html>

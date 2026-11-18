@@ -34,7 +34,7 @@ function setDisplay(element, value) {
 
 setDisplay(joinLobbyBtn, "none");
 setDisplay(createLobbyBtn, "none");
-setDisplay(readyBtn, "none");
+setDisplay(readyBtn, authenticateBtn ? "none" : "block");
 setDisplay(cleanupBtn, "none");
 setDisplay(startGameBtn, "none");
 setDisplay(lobbyIdDisplay, "none");
@@ -107,7 +107,7 @@ if(leaveBtn) {
         }
 
         await lobby.leaveLobby(userId, lobbyId);
-        setDisplay(lobbyContainer, "none");
+        window.location.href = "./index.html";
     });
 }
 
@@ -137,5 +137,4 @@ if(sevensBtn){
 export function showStartGameButton() {
     setDisplay(startGameBtn, "block");
 }
-
 
