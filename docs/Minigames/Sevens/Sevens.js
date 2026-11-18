@@ -26,7 +26,7 @@ function handleLeaveButtonClick(_leaveButton) {
   console.log("Setting up leave button click handler...");
   _leaveButton.addEventListener('click', () => {
     console.log("Leave button clicked. Leaving the game...");
-    playerManager.redirectToIndexPage();
+    playerManager.redirectToLobbyPage();
   });
 }
 
@@ -92,8 +92,8 @@ handleLobbyUpdate();
           startGame();
         }
         if (response === 'ended') {
-            console.log('Game ended. Returning to index page...');
-            playerManager.redirectToIndexPage();
+            console.log('Game ended. Returning to lobby page...');
+            playerManager.redirectToLobbyPage();
         }
       });
     } 

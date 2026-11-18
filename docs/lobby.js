@@ -25,6 +25,17 @@ export function getCurrentLobbyId() {
     return currentLobbyId;
 }
 
+export function navigateToLobbyPage(lobbyId = getCurrentLobbyId()) {
+    if (!lobbyId) {
+        console.error("Cannot return to the lobby page without a lobby ID.");
+        return;
+    }
+
+    const lobbyPage = new URL("./lobby.html", import.meta.url);
+    lobbyPage.searchParams.set("lobbyId", lobbyId);
+    window.location.href = lobbyPage.href;
+}
+
 export function setCurrentLobbyId(lobbyId) {
     currentLobbyId = lobbyId;
 }

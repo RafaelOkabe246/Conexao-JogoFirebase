@@ -1,7 +1,7 @@
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 
 import * as authentication from "../../authentication.js";
-import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
+import { getCurrentLobbyId, getIsHost, navigateToLobbyPage } from "../../lobby.js";
 
 class SevenPlayerManager{
     constructor(userId) {
@@ -82,8 +82,8 @@ class SevenPlayerManager{
             playerEndedGame: playerEndedGame
         });
     }
-    redirectToIndexPage() {
-            window.location.href = new URL('../../index.html', import.meta.url).href;
+    redirectToLobbyPage() {
+        navigateToLobbyPage(this.lobbyId);
     }
 
     async allPlayersEndedGame() {

@@ -101,8 +101,8 @@ let hasGameEnded = false;
           startGame();
         }
         if (response === 'ended') {
-            console.log('Game ended. Returning to index page...');
-            playerManager.redirectToIndexPage();
+            console.log('Game ended. Returning to lobby page...');
+            playerManager.redirectToLobbyPage();
         }
       });
     } 
@@ -711,10 +711,10 @@ let hasGameEnded = false;
   elements.menuBtn.addEventListener('click', async () => {
     playClickSound();
 
-    console.log('Returning to index page...');
+    console.log('Returning to lobby page...');
     await playerManager.closeGame();
 
-   playerManager.redirectToIndexPage();
+   playerManager.redirectToLobbyPage();
   });
 
   elements.lowerBtn.addEventListener('click', () => drawNext('lower'));

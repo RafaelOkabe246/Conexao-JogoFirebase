@@ -2,7 +2,7 @@ import {MiniGameHostManagerClass} from '../MinigameHostManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
 
 import * as authentication from "../../authentication.js";
-import { getCurrentLobbyId, getIsHost, leaveLobby } from "../../lobby.js";
+import { getCurrentLobbyId, getIsHost, leaveLobby, navigateToLobbyPage } from "../../lobby.js";
 
 class BingoJoyHostManager {
     constructor(userId) {
@@ -160,13 +160,13 @@ class BingoJoyHostManager {
 
     async waitHostRestartGame() {
         if(!this.IsHost) return;
-        window.location.href = '../../index.html';
+        navigateToLobbyPage(this.lobbyId);
 
         await realtimeDB.onValue(this.gameStateRef, (snapshot) => {
             const state = snapshot.val();
             if(state && state.GameState === 'playing') 
                 {
-                    console.log("Back to menu");
+                    console.log("Game restarted");
 
             }
         });

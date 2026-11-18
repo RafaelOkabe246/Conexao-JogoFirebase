@@ -1,6 +1,6 @@
 import {bingoJoyHostManager, bingoJoyHostManager as bjManager} from './BingoJoyHostManager.js';
 import {realtimeDataBaseMethods as realtimeDB} from "../../firebaseApp.js";
-import { getCurrentLobbyId, getIsHost } from "../../lobby.js";
+import { getCurrentLobbyId, getIsHost, navigateToLobbyPage } from "../../lobby.js";
 
 
 const TOTAL_CELLS = 20;
@@ -56,11 +56,6 @@ initializeBingoUi();
 
 handleLobbyUpdate();
 
-const redirectToIndexPage = () => {
-    window.location.href = new URL('../../index.html', import.meta.url).href;
-};
-
-
 async function handleLobbyUpdate() {
     // Implementation for handling lobby updates
     isHost = await getIsHost();
@@ -86,8 +81,8 @@ async function handleLobbyUpdate() {
         }
 
         if (response === 'ended') {
-            console.log('Game ended. Returning to index page...');
-            redirectToIndexPage();
+            console.log('Game ended. Returning to lobby page...');
+            navigateToLobbyPage(lobbyId);
         }
         });
     }
@@ -561,7 +556,7 @@ function ShowEndGameScreen(){
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
                 console.log("Game ended for all players");
-                redirectToIndexPage();
+                navigateToLobbyPage(lobbyId);
             }
         );
     }
