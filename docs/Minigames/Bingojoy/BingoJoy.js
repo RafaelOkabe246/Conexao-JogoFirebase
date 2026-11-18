@@ -46,6 +46,8 @@ const difficultyRef = realtimeDB.ref(database, `lobbies/${lobbyId}/GameData/diff
 console.log("Game data path " + gameDataRef);
 
 let isHost = false;
+let difficultyListenerUnsubscribe = null;
+let clientStartedDifficulty = null;
 
 let _rounds;
 let _playerRounds;
@@ -64,28 +66,35 @@ async function handleLobbyUpdate() {
     if(gameStatusRef && isHost === false){
         console.log('Client listening for game status updates...');
         realtimeDB.onValue(gameStatusRef, (snapshot) => {
-        const response = snapshot.val().toString();
-        console.log('Game status updated:', response);
-        
-        if (response === 'starting') {
-            console.log('Game status is now playing. Starting the game...');
-                    
-            realtimeDB.onValue(difficultyRef, (snapshot)=>{
-                const response = snapshot.val().toString();
-                console.log("GEer");
-                if(response === "easy" || response === "hard"){
+            const response = snapshot.val();
+            console.log('Game status updated:', response);
 
-                    startWithDifficultyClient(response);
+            if (response === 'starting') {
+                clientStartedDifficulty = null;
+                if (difficultyListenerUnsubscribe) {
+                    difficultyListenerUnsubscribe();
                 }
-            });
-        }
 
-        if (response === 'ended') {
-            console.log('Game ended. Returning to lobby page...');
-            navigateToLobbyPage(lobbyId);
-        }
+                difficultyListenerUnsubscribe = realtimeDB.onValue(difficultyRef, (difficultySnapshot) => {
+                    const difficulty = difficultySnapshot.val();
+                    if ((difficulty === "easy" || difficulty === "hard") &&
+                        difficulty !== clientStartedDifficulty) {
+                        clientStartedDifficulty = difficulty;
+                        startWithDifficultyClient(difficulty);
+                    }
+                });
+            }
+
+            if (response === 'ended') {
+                if (difficultyListenerUnsubscribe) {
+                    difficultyListenerUnsubscribe();
+                    difficultyListenerUnsubscribe = null;
+                }
+                console.log('Game ended. Returning to lobby page...');
+                navigateToLobbyPage(lobbyId);
+            }
         });
-    }
+    } 
 }
 
 async function initializeBingoUi() {
@@ -369,14 +378,6 @@ function endGame(win){
 
     console.log("End Game");
 
-    if(isHost){
-        ShowWaitScreen(
-            win ? 'Você venceu!' : 'Game Over',
-            `<p>Cartela completa em ordem numérica.</p><p class="small">
-            Rodadas: <strong>${state.round}</strong><br>`
-        );  
-    }
-
     waitForEndGame();
 
 }
@@ -414,9 +415,9 @@ async function playerEndedGame(hasWon){
 }
 
 
-function resetGame(){
-    
-    state.maxLives = state.difficulty === 'easy' ? 5 : 3;
+function resetGame(mode){
+    state.difficulty = mode;
+    state.maxLives = mode === 'easy' ? 5 : 3;
     state.lives = state.maxLives;
     state.round = 0;
     state.board = Array(TOTAL_CELLS).fill(null);
@@ -428,8 +429,6 @@ function resetGame(){
     state.gameEnded = false;
     renderLives();
     renderBoard();
-    startRound();
-    
 }
 
 
@@ -472,23 +471,15 @@ function playGameOverSound(){ [320,240,180].forEach((f,i)=>playTone(f,.22,'sawto
 
 historyBtn.addEventListener('click', showHistory);
 
-function startWithDifficulty(mode){
-if (!isHost) return;
+async function startWithDifficulty(mode){
+    if (!isHost) return;
     
-    //Set the difficulty at game data
-    realtimeDB.set(difficultyRef, mode);
+    await realtimeDB.set(difficultyRef, mode);
 
-    //Set the rounds based on the difficulty
     _rounds = generateRoundSequence(20,3);
-
-
-    state.difficulty = mode;
-    state.maxLives = mode === 'easy' ? 5 : 3;
-    state.lives = state.maxLives;
+    resetGame(mode);
     ensureAudio();
     startOverlay.classList.remove('show');
-    renderLives();
-    renderBoard();
     startRound();
     playTone(480,.08,'triangle',.03,0);
     playTone(620,.08,'triangle',.03,.06);
@@ -500,22 +491,12 @@ async function startWithDifficultyClient(mode){
     _rounds = roundsSnapshot.exists() ? roundsSnapshot.val() : [];
     console.log('Rounds loaded from Firebase:', _rounds);
 
-    state.difficulty = mode;
-    state.maxLives = mode === 'easy' ? 5 : 3;
-    state.lives = state.maxLives;
+    resetGame(mode);
     ensureAudio();
     startOverlay.classList.remove('show');
-
-
-    renderLives();
-    renderBoard();
     startRound();
     playTone(480,.08,'triangle',.03,0);
     playTone(620,.08,'triangle',.03,.06);
-
-    //Set the difficulty at game data
-    realtimeDB.set(difficultyRef, mode);
-
 }
 
 function ShowWaitScreen(tile, body){
@@ -538,15 +519,12 @@ function ShowEndGameScreen(){
             `<p>Todos os jogadores terminaram o jogo.</p><p class="small">Clique no botão abaixo para iniciar uma nova partida.</p>`,
             'Iniciar nova partida',
             async () => {
+                await bingoJoyHostManager.resetGameForAllPlayers();
                 await bingoJoyHostManager.updateGameStatus('starting');
                 await bingoJoyHostManager.SetGameState('starting');
-                await bingoJoyHostManager.resetGameForAllPlayers();
-
-                resetGame();
                 console.log("Game reset for all players");
                 modalOverlay.classList.remove('show');
                 startOverlay.classList.add('show');
-                startWithDifficulty('hard');   
             },
             true,
             'Sair do jogo',
