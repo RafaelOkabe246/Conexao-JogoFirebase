@@ -81,6 +81,8 @@ async function handleLobbyUpdate() {
                         difficulty !== clientStartedDifficulty) {
                         clientStartedDifficulty = difficulty;
                         startWithDifficultyClient(difficulty);
+                    } else if (difficulty !== "easy" && difficulty !== "hard") {
+                        clientStartedDifficulty = null;
                     }
                 });
             }
