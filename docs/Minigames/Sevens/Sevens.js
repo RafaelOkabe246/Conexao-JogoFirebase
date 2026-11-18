@@ -16,12 +16,6 @@ let hasGameEnded = false;
 const startButton = document.getElementById('startButton');
 const discardButton = document.getElementById('discardButton');
 const restartButton = document.getElementById('restartButton');
-const leaveButton = document.getElementById('endGameLeaveButton');
-
-leaveButton.addEventListener('click', async () => {
-  console.log("Leave button clicked. Leaving the game...");
-  await updateGameStatus("ended");
-});
 
 discardButton.addEventListener('click', () => {
   console.log("Discard button clicked. Discarding the current card...");
