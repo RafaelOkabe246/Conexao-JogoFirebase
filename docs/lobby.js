@@ -31,6 +31,7 @@ export function navigateToLobbyPage(lobbyId = getCurrentLobbyId()) {
         return;
     }
 
+    
     const lobbyPage = new URL("./lobby.html", import.meta.url);
     lobbyPage.searchParams.set("lobbyId", lobbyId);
     window.location.href = lobbyPage.href;
