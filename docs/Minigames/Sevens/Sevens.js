@@ -22,6 +22,14 @@ discardButton.addEventListener('click', () => {
   discardCard();
 });
 
+function handleLeaveButtonClick(_leaveButton) {
+  console.log("Setting up leave button click handler...");
+  _leaveButton.addEventListener('click', () => {
+    console.log("Leave button clicked. Leaving the game...");
+    playerManager.redirectToIndexPage();
+  });
+}
+
 function handleRestartButtonClick(_restartButton) {
   console.log("Setting up restart button click handler...");
   _restartButton.addEventListener('click', async () => {
@@ -405,11 +413,10 @@ function updateScore(){
 
 
   const msg = document.getElementById('message');
-  const leaveButton = document.getElementById('endGameLeaveButton');
-
 
   msg.style.display='flex';
-    if(isHost){
+
+  if(isHost){
       console.log("Host showing end game screen...");
       //Show host screen
        msg.innerHTML=`
@@ -431,13 +438,10 @@ function updateScore(){
   </div>
   `;
     msg.querySelector('#endGameRestartButton')
-  .addEventListener('click', handleRestartButtonClick(msg.querySelector('#endGameRestartButton')));
-  leaveButton.querySelector('#endGameLeaveButton')
-  .addEventListener('click', () => {
-    console.log("Leave button clicked. Leaving the game...");
-    playerManager.redirectToIndexPage();
-  });
+    .addEventListener('click', handleRestartButtonClick(msg.querySelector('#endGameRestartButton')));
 
+    msg.querySelector('#endGameLeaveButton')
+    .addEventListener('click', handleLeaveButtonClick(msg.querySelector('#endGameLeaveButton')));
 
     }else{
       //Show player client screen
