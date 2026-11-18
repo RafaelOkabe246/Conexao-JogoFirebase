@@ -83,6 +83,10 @@ handleLobbyUpdate();
           console.log('Game status is now playing. Starting the game...');
           startGame();
         }
+        if (response === 'ended') {
+            console.log('Game ended. Returning to index page...');
+            playerManager.redirectToIndexPage();
+        }
       });
     } 
 
@@ -419,6 +423,9 @@ function updateScore(){
   </div>
   <button id="endGameRestartButton" style="margin-top:12px;padding:14px 26px;font-size:18px;border-radius:14px;background:#00b95a;color:white;border:none;font-weight:bold;">
   Jogar Novamente
+  </button>
+    <button id="endGameLeaveButton" style="margin-top:12px;padding:14px 26px;font-size:18px;border-radius:14px;background:#00b95a;color:white;border:none;font-weight:bold;">
+  Sair
   </button>
   </div>
   `;

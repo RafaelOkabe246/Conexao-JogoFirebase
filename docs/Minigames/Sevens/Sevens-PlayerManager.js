@@ -82,7 +82,9 @@ class SevenPlayerManager{
             playerEndedGame: playerEndedGame
         });
     }
-
+    redirectToIndexPage() {
+            window.location.href = new URL('../../index.html', import.meta.url).href;
+    }
 
     async allPlayersEndedGame() {
         const snapshot = await realtimeDB.get(this.playersRef);
