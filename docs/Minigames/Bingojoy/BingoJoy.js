@@ -69,7 +69,7 @@ async function handleLobbyUpdate() {
             const response = snapshot.val();
             console.log('Game status updated:', response);
 
-            if (response === 'starting') {
+            if (response === 'playing') {
 
                 if (difficultyListenerUnsubscribe) {
                     difficultyListenerUnsubscribe();
