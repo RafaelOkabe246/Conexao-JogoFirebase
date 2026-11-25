@@ -47,7 +47,7 @@ console.log("Game data path " + gameDataRef);
 
 let isHost = false;
 let difficultyListenerUnsubscribe = null;
-let clientStartedDifficulty = null;
+
 
 let _rounds;
 let _playerRounds;
@@ -70,20 +70,15 @@ async function handleLobbyUpdate() {
             console.log('Game status updated:', response);
 
             if (response === 'starting') {
-                clientStartedDifficulty = null;
+
                 if (difficultyListenerUnsubscribe) {
                     difficultyListenerUnsubscribe();
                 }
 
                 difficultyListenerUnsubscribe = realtimeDB.onValue(difficultyRef, (difficultySnapshot) => {
                     const difficulty = difficultySnapshot.val();
-                    if ((difficulty === "easy" || difficulty === "hard") &&
-                        difficulty !== clientStartedDifficulty) {
-                        clientStartedDifficulty = difficulty;
-                        startWithDifficultyClient(difficulty);
-                    } else if (difficulty !== "easy" && difficulty !== "hard") {
-                        clientStartedDifficulty = null;
-                    }
+
+                    startWithDifficultyClient(difficulty);
                 });
             }
 
