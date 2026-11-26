@@ -87,6 +87,9 @@ handleLobbyUpdate();
         const response = snapshot.val().toString();
         console.log('Game status updated:', response);
         
+        if(response === 'starting'){
+        }
+
         if (response === 'playing'){
           console.log('Game status is now playing. Starting the game...');
           startGame();
@@ -103,7 +106,7 @@ handleLobbyUpdate();
       if(await playerManager.allPlayersEndedGame()){
         //console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
-        updateGameStatus('ended');
+        //updateGameStatus('ended');
       }
   }
   }
