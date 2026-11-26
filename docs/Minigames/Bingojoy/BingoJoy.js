@@ -472,6 +472,7 @@ async function startWithDifficulty(mode){
     if (!isHost) return;
     
     await realtimeDB.set(difficultyRef, mode);
+    await bingoJoyHostManager.updateGameStatus('playing');
 
     _rounds = generateRoundSequence(20,3);
     resetGame(mode);
@@ -539,8 +540,8 @@ function ShowEndGameScreen(){
 }
 
 
-easyBtn.addEventListener('click', () => startWithDifficulty('easy'));
-hardBtn.addEventListener('click', () => startWithDifficulty('hard'));
+easyBtn.addEventListener('click', async () => await startWithDifficulty('easy'));
+hardBtn.addEventListener('click', async () => await startWithDifficulty('hard'));
 
 
 
