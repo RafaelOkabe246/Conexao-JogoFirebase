@@ -54,7 +54,7 @@ let _playerRounds;
 
 const MAX_NUMBER = 99;
 
-initializeBingoUi();
+^//initializeBingoUi();
 
 handleLobbyUpdate();
 
@@ -68,6 +68,10 @@ async function handleLobbyUpdate() {
         realtimeDB.onValue(gameStatusRef, (snapshot) => {
             const response = snapshot.val();
             console.log('Game status updated:', response);
+
+            if(response === 'starting') {
+                await initializeBingoUi();
+            }
 
             if (response === 'playing') {
 
