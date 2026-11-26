@@ -54,7 +54,7 @@ let _playerRounds;
 
 const MAX_NUMBER = 99;
 
-^//initializeBingoUi();
+//initializeBingoUi();
 
 handleLobbyUpdate();
 
@@ -70,7 +70,7 @@ async function handleLobbyUpdate() {
             console.log('Game status updated:', response);
 
             if(response === 'starting') {
-                await initializeBingoUi();
+                initializeBingoUi();
             }
 
             if (response === 'playing') {
