@@ -34,7 +34,7 @@ function handleRestartButtonClick(_restartButton) {
   console.log("Setting up restart button click handler...");
   _restartButton.addEventListener('click', async () => {
     console.log("Restart button clicked. Restarting the game...");
-    if(isHost){
+    if(isHost && hasGameEnded){
       restartGame();
       await updateGameStatus('playing');
     }else{
