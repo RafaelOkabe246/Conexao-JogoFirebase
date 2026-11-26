@@ -106,7 +106,7 @@ handleLobbyUpdate();
       if(await playerManager.allPlayersEndedGame()){
         //console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
-        //updateGameStatus('ended');
+        updateGameStatus('starting');
       }
   }
   }
