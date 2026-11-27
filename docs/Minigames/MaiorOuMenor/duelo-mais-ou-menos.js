@@ -718,6 +718,12 @@ let hasGameEnded = false;
     playClickSound();
 
     console.log('Returning to lobby page...');
+
+    if(isHost){
+      console.log('Host is ending the game for all players...');
+      await updateGameStatus('ended');
+    }
+
     await playerManager.closeGame();
 
    playerManager.redirectToLobbyPage();
