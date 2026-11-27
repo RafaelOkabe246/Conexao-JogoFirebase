@@ -136,22 +136,23 @@ let hasGameEnded = false;
     }
   }
 
-  async function startTheGameAsHost(){
-    
-    if(!isHost) return;
-
-    //Verify if all players have ended the game before starting
-    if(!(await playerManager.allPlayersEndedGame())){
-      console.log('Not all players have ended the game yet. Cannot start the game.');
-      return;
-    }
-
+   function startTheGameAsHost(){
     startGame();
 
     console.log('Host playing the game...');
      updateGameStatus('playing');
 
   }
+
+  async function restartGameAsHost(){
+    
+    if(await playerManager.allPlayersEndedGame()){
+      console.log('All players have ended the game. Restarting the game...');
+      updateGameStatus('playing');
+    }
+
+  }
+
   //#endregion
 
   //#region Audio Functions
@@ -522,7 +523,6 @@ let hasGameEnded = false;
     await handleLobbyUpdate();
     renderResults();
     if(isHost){
-           //updateGameStatus('ended');
       showScreen(elements.result);
     }else{
       showScreen(elements.resultClient);
@@ -719,7 +719,7 @@ let hasGameEnded = false;
 
   elements.playBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.playBtnHost.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
-  elements.restartBtn.addEventListener('click', async () => { playClickSound(); await startTheGameAsHost(); });
+  elements.restartBtn.addEventListener('click', async () => { playClickSound(); await restartGameAsHost(); });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
 
   elements.menuBtn.addEventListener('click', async () => {
