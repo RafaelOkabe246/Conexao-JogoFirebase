@@ -148,7 +148,7 @@ let hasGameEnded = false;
     
     if(await playerManager.allPlayersEndedGame()){
       console.log('All players have ended the game. Restarting the game...');
-      updateGameStatus('playing');
+      startTheGameAsHost();
     }
 
   }
