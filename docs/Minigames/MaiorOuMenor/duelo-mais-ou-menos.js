@@ -96,6 +96,9 @@ let hasGameEnded = false;
         const response = snapshot.val().toString();
         console.log('Game status updated:', response);
         
+        if (response === 'starting'){
+        }
+
         if (response === 'playing'){
           console.log('Game status is now playing. Starting the game...');
           startGame();
@@ -109,11 +112,18 @@ let hasGameEnded = false;
 
   if((await getIsHost())){
       console.log('Host listening for game status updates...');
+      realtimeDB.onValue(playersRef, async (snapshot) => {
+        if(!snapshot.exists()) {
+          console.log("No players found in the lobby.");
+          return;
+        }
       if(await playerManager.allPlayersEndedGame()){
         //console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
-        updateGameStatus('ended');
+        //updateGameStatus('ended');
       }
+      });
+
   }
 
   }
