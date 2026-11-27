@@ -120,7 +120,7 @@ let hasGameEnded = false;
       if(await playerManager.allPlayersEndedGame()){
         //console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
-        //updateGameStatus('ended');
+        updateGameStatus('starting');
       }
       });
 
@@ -137,10 +137,6 @@ let hasGameEnded = false;
   }
 
    function startTheGameAsHost(){
-    
-    if(!hasGameEnded){
-   //   return;
-    }
     
     startGame();
 
