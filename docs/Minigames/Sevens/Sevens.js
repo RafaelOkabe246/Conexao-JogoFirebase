@@ -103,14 +103,21 @@ handleLobbyUpdate();
 
   if((await getIsHost())){
       console.log('Host listening for game status updates...');
-      if(await playerManager.allPlayersEndedGame()){
-        console.log('All players have ended the game. Can start the game...');
-        hasGameEnded = true;
-        updateGameStatus('starting');
-      }
-      else{
-        console.log('Not all players have ended the game yet. Waiting...');
-      }
+
+      realtimeDB.onValue(playersRef, async (snapshot) => {
+        if(!snapshot.exists()) {
+            console.log("No players found in the lobby.");
+        }
+        
+        if(await playerManager.allPlayersEndedGame()){
+          console.log('All players have ended the game. Can start the game...');
+          hasGameEnded = true;
+          updateGameStatus('starting');
+        }
+        else{
+          console.log('Not all players have ended the game yet. Waiting...');
+        }
+      });
   }
   }
 
