@@ -104,9 +104,12 @@ handleLobbyUpdate();
   if((await getIsHost())){
       console.log('Host listening for game status updates...');
       if(await playerManager.allPlayersEndedGame()){
-        //console.log('All players have ended the game. Can start the game...');
+        console.log('All players have ended the game. Can start the game...');
         hasGameEnded = true;
         updateGameStatus('starting');
+      }
+      else{
+        console.log('Not all players have ended the game yet. Waiting...');
       }
   }
   }
