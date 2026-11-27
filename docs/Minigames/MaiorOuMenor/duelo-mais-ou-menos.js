@@ -136,8 +136,16 @@ let hasGameEnded = false;
     }
   }
 
-   function startTheGameAsHost(){
+  async function startTheGameAsHost(){
     
+    if(!isHost) return;
+
+    //Verify if all players have ended the game before starting
+    if(!(await playerManager.allPlayersEndedGame())){
+      console.log('Not all players have ended the game yet. Cannot start the game.');
+      return;
+    }
+
     startGame();
 
     console.log('Host playing the game...');
@@ -711,7 +719,7 @@ let hasGameEnded = false;
 
   elements.playBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
   elements.playBtnHost.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
-  elements.restartBtn.addEventListener('click', () => { playClickSound(); startTheGameAsHost(); });
+  elements.restartBtn.addEventListener('click', async () => { playClickSound(); await startTheGameAsHost(); });
   elements.higherBtn.addEventListener('click', () => drawNext('higher'));
 
   elements.menuBtn.addEventListener('click', async () => {
